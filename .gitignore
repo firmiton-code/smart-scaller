@@ -396,3 +396,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# PlatformIO
+main_firmware/.pio
+main_firmware/.vscode
