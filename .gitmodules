@@ -1,0 +1,6 @@
+[submodule "main_firmware/lib/HX711_ADC"]
+	path = main_firmware/lib/HX711_ADC
+	url = https://github.com/olkal/HX711_ADC.git
+[submodule "main_firmware/lib/TFT_eSPIC"]
+	path = main_firmware/lib/TFT_eSPIC
+	url = https://github.com/Bodmer/TFT_eSPI.git
