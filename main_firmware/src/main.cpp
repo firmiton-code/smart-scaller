@@ -7,9 +7,7 @@
 #include "data/_name.h"
 #include "data/_protein.h"
 #include "data/_serat.h"
-
-const int calVal_eepromAdress = 0;
-unsigned long t = 0;
+#include "data/_carbing.h"
 
 void setup() {
   // put your setup code here, to run once:
@@ -28,6 +26,8 @@ void setup() {
   x = _protein[5];
   Serial.println(x);
   x = _serat[5];
+  Serial.println(x);
+  x = _carbing[5];
   Serial.println(x);
   lcd.show_choose();lcd.notice("BPM", "Bad");lcd.showBattery(BATTERY_LOW);
 }
