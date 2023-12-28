@@ -36,30 +36,35 @@ class LCDClass{
     TFT_eSprite textSprite = TFT_eSprite(&tft);
     TFT_eSprite logoSprite = TFT_eSprite(&tft);
     Battery_Level_t batt;
-    bool _connection = false;
-    bool _play = false;
-    bool _power = false;
+    
+    int _key;
+    bool _enter = false;
+    bool _back = false;
+    bool _next = false;
+    bool _delete = false;
+    bool _total = false;
 
   public:
     LCDClass();
     void init();
-    void boot();
-    void show(String value1, String value2, String value3, String value4, String value5);
-    void notice(String value, String note);
-    void load(int percentage);
+    void showValue(String value1, String value2, String value3, String value4, String value5);
+    void loading(int percentage);
+    
     void reset();
+    
     void showBattery(Battery_Level_t batt_level);
+
     void show_choose();
 
     void calibration();
 
     bool touchUpdate();
-    bool getConnection();
-    bool getPlay();
-    bool getPower();
 
-    void setPlay(bool play);
-    void update(int batt);
+    bool getEnter();
+    bool getBack();
+    bool getNext();
+    bool getDelete();
+    bool getTotal();
 };
 
 extern LCDClass lcd;

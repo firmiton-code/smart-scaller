@@ -7,7 +7,7 @@
 #include "data/_name.h"
 #include "data/_protein.h"
 #include "data/_serat.h"
-#include "data/_carbing.h"
+#include "data/_id.h"
 
 void setup() {
   // put your setup code here, to run once:
@@ -16,7 +16,6 @@ void setup() {
   load.begin();
   String x = _name[5];
   Serial.println(x);
-  lcd.boot();
   x = _air[5];
   Serial.println(x);
   x = _energy[5];
@@ -27,12 +26,15 @@ void setup() {
   Serial.println(x);
   x = _serat[5];
   Serial.println(x);
-  x = _carbing[5];
+  x = _id[5];
   Serial.println(x);
-  lcd.show_choose();lcd.notice("BPM", "Bad");lcd.showBattery(BATTERY_LOW);
+  lcd.show_choose();lcd.showBattery(BATTERY_LOW);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   Serial.println(load.weight());
+  lcd.show_choose();
+
+  
 }

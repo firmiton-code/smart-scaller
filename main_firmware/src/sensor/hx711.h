@@ -7,6 +7,9 @@
 #include <EEPROM.h>
 #endif
 
+// const int calVal_eepromAdress = 0;
+// unsigned long t = 0;
+
 class HX711Class{
   public:
     HX711Class();
