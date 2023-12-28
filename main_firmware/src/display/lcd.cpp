@@ -119,6 +119,14 @@ void LCDClass::reset(){
   tft.fillScreen(BG_COLOR);
 }
 
+void LCDClass::show(String screen){
+  if(screen == "dash"){
+    tft.pushImage(0, 0, 320, 240, Dashboard);
+  } else if(screen == "nutri"){
+    tft.pushImage(0, 0, 320, 240, Code_Input);
+  }
+}
+
 void LCDClass::showBattery(Battery_Level_t batt_level){
   switch (batt_level){
     case BATTERY_LOW :
@@ -146,58 +154,72 @@ bool LCDClass::touchUpdate(){
   uint16_t t_x, t_y;
   tft.getTouchRaw(&t_x, &t_y);
   tft.convertRawXY(&t_x, &t_y);
-  
 
   if(t_x >= 186 && t_x <= 226 && t_y >= 50 && t_y <=91){
     _key = 7;
+    Serial.println("7");
   } else if(t_x >= 230 && t_x <= 270 && t_y >= 50 && t_y <=91){
     _key = 8;
+    Serial.println("8");
   } else if(t_x >= 274 && t_x <= 314 && t_y >= 50 && t_y <=91){
     _key = 9;
+    Serial.println("9");
   } else if(t_x >= 186 && t_x <= 226 && t_y >= 96 && t_y <=136){
     _key = 4;
+    Serial.println("4");
   } else if(t_x >= 230 && t_x <= 270 && t_y >= 96 && t_y <=136){
     _key = 5;
+    Serial.println("5");
   } else if(t_x >= 274 && t_x <= 314 && t_y >= 96 && t_y <=136){
     _key = 6;
+    Serial.println("6");
   } else if(t_x >= 186 && t_x <= 226 && t_y >= 142 && t_y <=182){
     _key = 1;
+    Serial.println("1");
   } else if(t_x >= 230 && t_x <= 270 && t_y >= 142 && t_y <=182){
     _key = 2;
+    Serial.println("2");
   } else if(t_x >= 274 && t_x <= 314 && t_y >= 142 && t_y <=182){
     _key = 3;
+    Serial.println("3");
   } else if(t_x >= 186 && t_x <= 226 && t_y >= 188 && t_y <=228){
     _key = 0;
+    Serial.println("0");
   } else{
     _key = 99;
   }
   
   if(t_x >= 230 && t_x <= 314 && t_y >= 188 && t_y <=228){
     _enter = true;
+    Serial.println("Enter");
   } else{
     _enter = false;
   }
 
   if(t_x >= 17 && t_x <= 42 && t_y >= 17 && t_y <=42){
     _back = true;
+    Serial.println("Back");
   } else{
     _back = false;
   }
   
   if(t_x >= 303 && t_x <= 328 && t_y >= 17 && t_y <=42){
     _next = true;
+    Serial.println("Next");
   } else{
     _next = false;
   }
 
   if(t_x >= 289 && t_x <= 309 && t_y >= 15 && t_y <=36){
     _delete = true;
+    Serial.println("Delete");
   } else{
     _delete = false;
   }
   
   if(t_x >= 169 && t_x <= 194 && t_y >= 17 && t_y <=42){
     _total = true;
+    Serial.println("Total");
   } else{
     _total = false;
   }

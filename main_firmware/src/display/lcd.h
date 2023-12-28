@@ -54,6 +54,8 @@ class LCDClass{
     
     void showBattery(Battery_Level_t batt_level);
 
+    void show(String screen);
+
     void show_choose();
 
     void calibration();

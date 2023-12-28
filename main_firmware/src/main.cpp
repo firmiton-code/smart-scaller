@@ -1,13 +1,7 @@
 #include <Arduino.h>
 #include "display/lcd.h"
 #include "sensor/hx711.h"
-#include "data/_air.h"
-#include "data/_energy.h"
-#include "data/_karbo.h"
-#include "data/_name.h"
-#include "data/_protein.h"
-#include "data/_serat.h"
-#include "data/_id.h"
+#include "data/master.h"
 
 void setup() {
   // put your setup code here, to run once:
@@ -28,13 +22,12 @@ void setup() {
   Serial.println(x);
   x = _id[5];
   Serial.println(x);
-  lcd.show_choose();lcd.showBattery(BATTERY_LOW);
+  lcd.show("dash");
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   Serial.println(load.weight());
-  lcd.show_choose();
-
-  
+  lcd.touchUpdate();
+  delay(100);
 }
