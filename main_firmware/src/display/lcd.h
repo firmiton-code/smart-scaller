@@ -24,6 +24,13 @@
 #define NUMBER_TEXT 7
 
 typedef enum {
+  DASHBOARD_SCREEN,
+  UNIVERSAL_WEIGHT_SCREEN,
+  NUTRITION_WEIGHT_SCREEN,
+  TOTAL_NUTRITION_SCREEN
+} Screen_position_t;
+
+typedef enum {
   BATTERY_LOW,
   BATTERY_HALF,
   BATTERY_FULL
@@ -36,6 +43,7 @@ class LCDClass{
     TFT_eSprite textSprite = TFT_eSprite(&tft);
     TFT_eSprite logoSprite = TFT_eSprite(&tft);
     Battery_Level_t batt;
+    Screen_position_t _screen;
     
     int _key;
     bool _enter = false;
@@ -43,23 +51,21 @@ class LCDClass{
     bool _next = false;
     bool _delete = false;
     bool _total = false;
+    int _mode = 0;
 
   public:
     LCDClass();
     void init();
     void showValue(String value1, String value2, String value3, String value4, String value5);
     void loading(int percentage);
-    
     void reset();
-    
     void showBattery(Battery_Level_t batt_level);
+    void show(Screen_position_t screen);
+    void updateValue(float weight_value);
+    void updateCode(String code);
 
-    void show(String screen);
-
-    void show_choose();
-
+    // Touch Function
     void calibration();
-
     bool touchUpdate();
 
     bool getEnter();
@@ -67,6 +73,7 @@ class LCDClass{
     bool getNext();
     bool getDelete();
     bool getTotal();
+    int getKey();
 };
 
 extern LCDClass lcd;

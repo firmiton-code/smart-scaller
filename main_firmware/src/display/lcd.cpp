@@ -119,12 +119,18 @@ void LCDClass::reset(){
   tft.fillScreen(BG_COLOR);
 }
 
-void LCDClass::show(String screen){
-  if(screen == "dash"){
+void LCDClass::show(Screen_position_t screen){
+  if(screen == DASHBOARD_SCREEN){
     tft.pushImage(0, 0, 320, 240, Dashboard);
-  } else if(screen == "nutri"){
+  } else if(screen == UNIVERSAL_WEIGHT_SCREEN){
+    tft.pushImage(0, 0, 320, 240, Weight_Scalling);
+  } else if(screen == NUTRITION_WEIGHT_SCREEN){
     tft.pushImage(0, 0, 320, 240, Code_Input);
+  } else if(screen == TOTAL_NUTRITION_SCREEN){
+    tft.pushImage(0, 0, 320, 240, Output);
   }
+
+  _screen = screen;
 }
 
 void LCDClass::showBattery(Battery_Level_t batt_level){
@@ -224,11 +230,27 @@ bool LCDClass::touchUpdate(){
     _total = false;
   }
 
+  if(t_x >= 169 && t_x <= 194 && t_y >= 17 && t_y <=42){
+    _total = true;
+    Serial.println("Total");
+  } else{
+    _total = false;
+  }
+
   return true;
 }
 
-void LCDClass::show_choose(){
-  tft.pushImage(0, 0, 320, 240, Dashboard);
+void LCDClass::updateValue(float weight_value){
+  String text_value = String(weight_value, 2);
+  tft.setFreeFont(&FreeSans18pt7b);
+  tft.setTextDatum(CC_DATUM);
+  tft.drawString(text_value, 93, 77, 6);  //koordinat berat yg 2 variabel tengah
+}
+
+void LCDClass::updateCode(String code){
+  tft.setFreeFont(&FreeSans18pt7b);
+  tft.setTextDatum(TL_DATUM);
+  tft.drawString(code, 192, 16, 1);
 }
 
 bool LCDClass::getEnter(){
@@ -249,6 +271,10 @@ bool LCDClass::getDelete(){
 
 bool LCDClass::getTotal(){
   return _total;
+}
+
+int LCDClass::getKey(){
+  return _key;
 }
 
 LCDClass lcd;
