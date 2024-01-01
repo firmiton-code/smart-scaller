@@ -25,7 +25,7 @@
 
 typedef enum {
   BANANA,
-  
+  UNKNOWN
 } Food_type_t;
 
 typedef enum {
@@ -57,19 +57,20 @@ class LCDClass{
     bool _next = false;
     bool _delete = false;
     bool _total = false;
+    bool _home = false;
     int _mode = 0;
 
   public:
     LCDClass();
     void init();
-    void showValue(String value1, String value2, String value3, String value4, String value5);
+    void showValue(String value1, String value2, String value3, String value4, String value5, String value6);
     void loading(int percentage);
     void reset();
     void updateBattery(Battery_Level_t batt_level);
     void show(Screen_position_t screen);
     void updateValue(float weight_value);
     void updateCode(String code);
-    void showFood();
+    void showFood(Food_type_t food);
 
     // Touch Function
     void calibration();
@@ -80,6 +81,7 @@ class LCDClass{
     bool getNext();
     bool getDelete();
     bool getTotal();
+    bool getHome();
     int getKey();
     int getMode();  
 

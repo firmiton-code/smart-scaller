@@ -87,25 +87,16 @@ void LCDClass::init(){
   tft.pushImage(0, 0, 320, 240, Boot);
 }
 
-void LCDClass::showValue(String value1, String value2, String value3, String value4, String value5){
-  tft.fillScreen(BG_COLOR);
-  tft.pushImage(0, 0, 320, 240, Dashboard);
+void LCDClass::showValue(String value1, String value2, String value3, String value4, String value5, String value6){
+  tft.setFreeFont(&FreeSans9pt7b);
+  tft.setTextDatum(TR_DATUM);
 
-  tft.setTextDatum(TR_DATUM);
-  tft.drawString(value1, 108, 45, 6);
-  
-  tft.setTextDatum(TR_DATUM);
-  tft.drawString(value2, 270, 45, 6);
-  
-  tft.setTextDatum(TR_DATUM);
-  tft.drawString(value3, 123, 165, 6);
-  
-  tft.setFreeFont(&FreeSans18pt7b);
-  tft.setTextDatum(TR_DATUM);
+  tft.drawString(value1, 108, 45, 1);
+  tft.drawString(value2, 270, 45, 1);
+  tft.drawString(value3, 123, 165, 1);
   tft.drawString(value4, 270, 160, 1);
-  tft.drawString(value5, 270, 190, 1);
-  
-  tft.setFreeFont(&FreeSans12pt7b);
+  tft.drawString(value5, 123, 165, 1);
+  tft.drawString(value6, 270, 160, 1);
 }
 
 void LCDClass::loading(int percentage){
@@ -238,11 +229,11 @@ bool LCDClass::touchUpdate(){
     _total = false;
   }
 
-  if(t_x >= 169 && t_x <= 194 && t_y >= 17 && t_y <=42){
-    _total = true;
-    Serial.println("Total");
+  if(t_x >= 281 && t_x <= 301 && t_y >= 19 && t_y <=39){
+    _home = true;
+    Serial.println("Home");
   } else{
-    _total = false;
+    _home = false;
   }
 
   if(t_x >= 20 && t_x <= 150 && t_y >= 20 && t_y <=220){
@@ -260,16 +251,35 @@ bool LCDClass::touchUpdate(){
 
 void LCDClass::updateValue(float weight_value){
   String text_value = String(weight_value, 2);
-  tft.setFreeFont(&FreeSans18pt7b);
   tft.setTextDatum(CC_DATUM);
-  if(_screen = NUTRITION_WEIGHT_SCREEN) tft.drawString(text_value, 93, 77, 6);  //koordinat berat yg 2 variabel tengah
-  else if(_screen = UNIVERSAL_WEIGHT_SCREEN) tft.drawString(text_value, 160, 90, 6);
+  if(_screen = NUTRITION_WEIGHT_SCREEN){
+    tft.setFreeFont(&FreeSans12pt7b);
+    tft.drawString(text_value, 93, 77, 6);  //koordinat berat yg 2 variabel tengah
+  } else if(_screen = UNIVERSAL_WEIGHT_SCREEN){  
+    tft.setFreeFont(&FreeSans9pt7b);
+    tft.drawString(text_value, 160, 90, 6);
+  }
 }
 
 void LCDClass::updateCode(String code){
-  tft.setFreeFont(&FreeSans18pt7b);
+  tft.setFreeFont(&FreeSans9pt7b);
   tft.setTextDatum(TL_DATUM);
   tft.drawString(code, 192, 16, 1);
+}
+
+void LCDClass::showFood(Food_type_t food){
+  switch (food){
+    case BANANA :
+      tft.pushImage(57, 111, 70, 70, Icon_Makanan_Pisang, BG_COLOR);
+      break;
+    case UNKNOWN :
+      tft.pushImage(57, 111, 70, 70, Icon_Makanan_Unknown, BG_COLOR);
+      break;
+
+    default :
+      tft.pushImage(57, 111, 70, 70, Icon_Makanan_Unknown, BG_COLOR);
+      break;
+  }
 }
 
 bool LCDClass::getEnter(){
@@ -290,6 +300,10 @@ bool LCDClass::getDelete(){
 
 bool LCDClass::getTotal(){
   return _total;
+}
+
+bool LCDClass::getHome(){
+  return _home;
 }
 
 int LCDClass::getKey(){
