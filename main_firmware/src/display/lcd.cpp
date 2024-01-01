@@ -120,36 +120,44 @@ void LCDClass::reset(){
 }
 
 void LCDClass::show(Screen_position_t screen){
-  if(screen == DASHBOARD_SCREEN){
-    tft.pushImage(0, 0, 320, 240, Dashboard);
-  } else if(screen == UNIVERSAL_WEIGHT_SCREEN){
-    tft.pushImage(0, 0, 320, 240, Weight_Scalling);
-  } else if(screen == NUTRITION_WEIGHT_SCREEN){
-    tft.pushImage(0, 0, 320, 240, Code_Input);
-  } else if(screen == TOTAL_NUTRITION_SCREEN){
-    tft.pushImage(0, 0, 320, 240, Output);
+  switch (screen) {
+    case DASHBOARD_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Dashboard);
+      break;
+    case UNIVERSAL_WEIGHT_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Weight_Scalling);
+      break;
+    case NUTRITION_WEIGHT_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Code_Input);
+      break;
+    case TOTAL_NUTRITION_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Output);
+      break;
+    case SETTING_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Setting);
+      break;
+    
+    default :
+      tft.pushImage(0, 0, 320, 240, Boot);
+      break;
   }
-
+  
   _screen = screen;
 }
 
-void LCDClass::showBattery(Battery_Level_t batt_level){
+void LCDClass::updateBattery(Battery_Level_t batt_level){
   switch (batt_level){
     case BATTERY_LOW :
-      tft.pushImage(280, 104, 26, 26, Output, BG_COLOR);
-      // tft.fillRect(305, 19, 15, 2, BG_COLOR);
+      tft.pushImage(183, 173, 35, 35, Battery_Low, BG_COLOR);
       break;
     case BATTERY_HALF :
-      tft.pushImage(280, 104, 26, 26, Loading, BG_COLOR);
-      // tft.fillRect(305, 19, 15, 2, BG_COLOR);
+      tft.pushImage(183, 173, 35, 35, Battery_Half, BG_COLOR);
       break;
     case BATTERY_FULL :
-      tft.pushImage(280, 104, 26, 26, Weight_Scalling, BG_COLOR);
-      // tft.fillRect(305, 19, 15, 2, BG_COLOR);
+      tft.pushImage(183, 173, 35, 35, Battery_Full, BG_COLOR);
       break;
     default :
-      tft.pushImage(280, 104, 26, 26, Error, BG_COLOR);
-      // tft.fillRect(305, 19, 15, 2, BG_COLOR);
+      tft.pushImage(183, 173, 35, 35, Battery_Low, BG_COLOR);
       break;
   }
 }
@@ -237,6 +245,16 @@ bool LCDClass::touchUpdate(){
     _total = false;
   }
 
+  if(t_x >= 20 && t_x <= 150 && t_y >= 20 && t_y <=220){
+    _mode = 1;
+  } else if(t_x >= 170 && t_x <= 300 && t_y >= 20 && t_y <=149){
+    _mode = 2;
+  } else if(t_x >= 240 && t_x <= 300 && t_y >= 160 && t_y <=220){
+    _mode = 3;
+  } else{
+    _mode = 0;
+  }
+
   return true;
 }
 
@@ -244,7 +262,8 @@ void LCDClass::updateValue(float weight_value){
   String text_value = String(weight_value, 2);
   tft.setFreeFont(&FreeSans18pt7b);
   tft.setTextDatum(CC_DATUM);
-  tft.drawString(text_value, 93, 77, 6);  //koordinat berat yg 2 variabel tengah
+  if(_screen = NUTRITION_WEIGHT_SCREEN) tft.drawString(text_value, 93, 77, 6);  //koordinat berat yg 2 variabel tengah
+  else if(_screen = UNIVERSAL_WEIGHT_SCREEN) tft.drawString(text_value, 160, 90, 6);
 }
 
 void LCDClass::updateCode(String code){
@@ -275,6 +294,14 @@ bool LCDClass::getTotal(){
 
 int LCDClass::getKey(){
   return _key;
+}
+
+int LCDClass::getMode(){
+  return _mode;
+}
+
+Screen_position_t LCDClass::getScreen(){
+  return _screen;
 }
 
 LCDClass lcd;

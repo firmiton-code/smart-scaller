@@ -24,10 +24,16 @@
 #define NUMBER_TEXT 7
 
 typedef enum {
+  BANANA,
+  
+} Food_type_t;
+
+typedef enum {
   DASHBOARD_SCREEN,
   UNIVERSAL_WEIGHT_SCREEN,
   NUTRITION_WEIGHT_SCREEN,
-  TOTAL_NUTRITION_SCREEN
+  TOTAL_NUTRITION_SCREEN,
+  SETTING_SCREEN
 } Screen_position_t;
 
 typedef enum {
@@ -59,10 +65,11 @@ class LCDClass{
     void showValue(String value1, String value2, String value3, String value4, String value5);
     void loading(int percentage);
     void reset();
-    void showBattery(Battery_Level_t batt_level);
+    void updateBattery(Battery_Level_t batt_level);
     void show(Screen_position_t screen);
     void updateValue(float weight_value);
     void updateCode(String code);
+    void showFood();
 
     // Touch Function
     void calibration();
@@ -74,6 +81,9 @@ class LCDClass{
     bool getDelete();
     bool getTotal();
     int getKey();
+    int getMode();  
+
+    Screen_position_t getScreen();
 };
 
 extern LCDClass lcd;
