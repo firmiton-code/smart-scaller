@@ -45,9 +45,9 @@ typedef enum {
 class LCDClass{
   private:
     TFT_eSPI tft = TFT_eSPI();
-    TFT_eSprite bgSprite = TFT_eSprite(&tft);
-    TFT_eSprite textSprite = TFT_eSprite(&tft);
-    TFT_eSprite logoSprite = TFT_eSprite(&tft);
+    TFT_eSprite textWeightNutri = TFT_eSprite(&tft);
+    TFT_eSprite textWeightUniv = TFT_eSprite(&tft);
+    TFT_eSprite textCode = TFT_eSprite(&tft);
     Battery_Level_t batt;
     Screen_position_t _screen;
     

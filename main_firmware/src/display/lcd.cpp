@@ -82,6 +82,10 @@ void LCDClass::init(){
   tft.setFreeFont(&FreeSans12pt7b);
   tft.setTextColor(TFT_BLACK, BG_COLOR);
   
+  textWeightNutri.createSprite(170, 35);
+  textCode.createSprite(100, 30);
+  textWeightUniv.createSprite(280, 70);
+
   Serial.print("Free Heap: ");
   Serial.println(ESP.getFreeHeap());
   tft.pushImage(0, 0, 320, 240, Boot);
@@ -89,14 +93,14 @@ void LCDClass::init(){
 
 void LCDClass::showValue(String value1, String value2, String value3, String value4, String value5, String value6){
   tft.setFreeFont(&FreeSans9pt7b);
-  tft.setTextDatum(TR_DATUM);
+  tft.setTextDatum(BR_DATUM);
 
-  tft.drawString(value1, 108, 45, 1);
-  tft.drawString(value2, 270, 45, 1);
-  tft.drawString(value3, 123, 165, 1);
-  tft.drawString(value4, 270, 160, 1);
-  tft.drawString(value5, 123, 165, 1);
-  tft.drawString(value6, 270, 160, 1);
+  tft.drawString(value1, 256, 73, 1);
+  tft.drawString(value2, 256, 104, 1);
+  tft.drawString(value3, 256, 129, 1);
+  tft.drawString(value4, 256, 154, 1);
+  tft.drawString(value5, 256, 179, 1);
+  tft.drawString(value6, 256, 204, 1);
 }
 
 void LCDClass::loading(int percentage){
@@ -160,41 +164,41 @@ bool LCDClass::touchUpdate(){
   tft.getTouchRaw(&t_x, &t_y);
   tft.convertRawXY(&t_x, &t_y);
 
-  if(t_x >= 186 && t_x <= 226 && t_y >= 50 && t_y <=91){
+  if(t_x >= 191 && t_x <= 221 && t_y >= 55 && t_y <=86){
     _key = 7;
     Serial.println("7");
-  } else if(t_x >= 230 && t_x <= 270 && t_y >= 50 && t_y <=91){
+  } else if(t_x >= 235 && t_x <= 265 && t_y >= 55 && t_y <=86){
     _key = 8;
     Serial.println("8");
-  } else if(t_x >= 274 && t_x <= 314 && t_y >= 50 && t_y <=91){
+  } else if(t_x >= 279 && t_x <= 309 && t_y >= 55 && t_y <=86){
     _key = 9;
     Serial.println("9");
-  } else if(t_x >= 186 && t_x <= 226 && t_y >= 96 && t_y <=136){
+  } else if(t_x >= 191 && t_x <= 221 && t_y >= 101 && t_y <=131){
     _key = 4;
     Serial.println("4");
-  } else if(t_x >= 230 && t_x <= 270 && t_y >= 96 && t_y <=136){
+  } else if(t_x >= 235 && t_x <= 265 && t_y >= 101 && t_y <=131){
     _key = 5;
     Serial.println("5");
-  } else if(t_x >= 274 && t_x <= 314 && t_y >= 96 && t_y <=136){
+  } else if(t_x >= 279 && t_x <= 309 && t_y >= 101 && t_y <=131){
     _key = 6;
     Serial.println("6");
-  } else if(t_x >= 186 && t_x <= 226 && t_y >= 142 && t_y <=182){
+  } else if(t_x >= 191 && t_x <= 221 && t_y >= 147 && t_y <=177){
     _key = 1;
     Serial.println("1");
-  } else if(t_x >= 230 && t_x <= 270 && t_y >= 142 && t_y <=182){
+  } else if(t_x >= 235 && t_x <= 265 && t_y >= 147 && t_y <=177){
     _key = 2;
     Serial.println("2");
-  } else if(t_x >= 274 && t_x <= 314 && t_y >= 142 && t_y <=182){
+  } else if(t_x >= 279 && t_x <= 309 && t_y >= 147 && t_y <=177){
     _key = 3;
     Serial.println("3");
-  } else if(t_x >= 186 && t_x <= 226 && t_y >= 188 && t_y <=228){
+  } else if(t_x >= 191 && t_x <= 221 && t_y >= 193 && t_y <=223){
     _key = 0;
     Serial.println("0");
   } else{
     _key = 99;
   }
   
-  if(t_x >= 230 && t_x <= 314 && t_y >= 188 && t_y <=228){
+  if(t_x >= 235 && t_x <= 309 && t_y >= 193 && t_y <=223){
     _enter = true;
     Serial.println("Enter");
   } else{
@@ -251,13 +255,18 @@ bool LCDClass::touchUpdate(){
 
 void LCDClass::updateValue(float weight_value){
   String text_value = String(weight_value, 2);
-  tft.setTextDatum(CC_DATUM);
   if(_screen = NUTRITION_WEIGHT_SCREEN){
-    tft.setFreeFont(&FreeSans12pt7b);
-    tft.drawString(text_value, 93, 77, 6);  //koordinat berat yg 2 variabel tengah
-  } else if(_screen = UNIVERSAL_WEIGHT_SCREEN){  
-    tft.setFreeFont(&FreeSans9pt7b);
-    tft.drawString(text_value, 160, 90, 6);
+    textWeightNutri.fillSprite(BG_COLOR);
+    textWeightNutri.setTextDatum(CC_DATUM);
+    textWeightNutri.setFreeFont(&FreeSans12pt7b);
+    textWeightNutri.drawString(text_value, 85, 32, 6);  //koordinat berat yg 2 variabel tengah
+    textWeightNutri.pushSprite(8, 60);
+  } else if(_screen = UNIVERSAL_WEIGHT_SCREEN){ 
+    textWeightUniv.fillSprite(BG_COLOR); 
+    textWeightUniv.setTextDatum(CC_DATUM);
+    textWeightUniv.setFreeFont(&FreeSans9pt7b);
+    textWeightUniv.drawString(text_value, 140, 35, 6);
+    textWeightUniv.pushSprite(30, 60);
   }
 }
 

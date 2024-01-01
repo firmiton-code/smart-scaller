@@ -6,7 +6,7 @@
 String codeDump = "";
 int codeDump2 = 0;
 int weightDump;
-int weightTotal;
+// int weightPerNutrient[];
 
 unsigned long battScan = 0;
 unsigned long weightScan = 0;
@@ -53,7 +53,7 @@ void loop() {
       if(lcd.getKey() < 10){
         if(codeDump2 < 1){
           codeDump2 = lcd.getKey();
-        } else if(codeDump2 > 1){
+        } else if(codeDump2 >= 1){
           codeDump2 = (codeDump2 * 10) + lcd.getKey();
         }
         lcd.updateCode(String(codeDump2));
@@ -86,7 +86,7 @@ void loop() {
         lcd.updateCode(String(codeDump2));
       }
       
-      if(lcd.getNext()){
+      if(lcd.getTotal()){
         lcd.show(TOTAL_NUTRITION_SCREEN);
         lcd.showValue("10", "20", "30", "40", "50", "60");
       }
