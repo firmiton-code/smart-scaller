@@ -45,8 +45,10 @@ void loop() {
 
   } else if(lcd.getScreen() == NUTRITION_WEIGHT_SCREEN){
     if(load.update()) {
-      Serial.println(load.weight());
-      lcd.updateValue(load.weight()); //block updateValue trus pencet f12 buat edit fungsinya
+      float weight_load = load.weight();
+      if(weight_load < 0.00) weight_load = 0.00;
+      Serial.println(weight_load);
+      lcd.updateValue(weight_load);
     }
 
     if(lcd.touchUpdate()){
@@ -99,8 +101,10 @@ void loop() {
 
   } else if(lcd.getScreen() == UNIVERSAL_WEIGHT_SCREEN){
     if(load.update()) {
-      Serial.println(load.weight());
-      lcd.updateValue(load.weight()); //block updateValue trus pencet f12 buat edit fungsinya
+      float weight_load = load.weight();
+      if(weight_load < 0.00) weight_load = 0.00;
+      Serial.println(weight_load);
+      lcd.updateValue(weight_load);
     }
     
     if(lcd.touchUpdate()){
