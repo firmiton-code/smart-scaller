@@ -18,6 +18,7 @@ void setup() {
   delay(2000);
   load.begin();
   pinMode(7, INPUT);
+  pinMode(42, OUTPUT);
   lcd.show(DASHBOARD_SCREEN); lcd.updateBattery(BATTERY_FULL);
 }
 

@@ -144,19 +144,19 @@ void LCDClass::updateBattery(Battery_Level_t batt_level){
   switch (batt_level){
     case BATTERY_LOW :
       tft.pushImage(183, 173, 35, 35, Battery_Low, BG_COLOR);
-      tft.fillRect(200, 205, 18, 210, BG_COLOR);
+      tft.fillRect(200, 205, 18, 5, BG_COLOR);
       break;
     case BATTERY_HALF :
       tft.pushImage(183, 173, 35, 35, Battery_Half, BG_COLOR);
-      tft.fillRect(200, 205, 18, 210, BG_COLOR);
+      tft.fillRect(200, 205, 18, 5, BG_COLOR);
       break;
     case BATTERY_FULL :
       tft.pushImage(183, 173, 35, 35, Battery_Full, BG_COLOR);
-      tft.fillRect(200, 205, 18, 210, BG_COLOR);
+      tft.fillRect(200, 205, 18, 5, BG_COLOR);
       break;
     default :
       tft.pushImage(183, 173, 35, 35, Battery_Low, BG_COLOR);
-      tft.fillRect(200, 205, 18, 210, BG_COLOR);
+      tft.fillRect(200, 205, 18, 5, BG_COLOR);
       break;
   }
 }
@@ -263,9 +263,9 @@ void LCDClass::updateValue(float weight_value){
     textWeightNutri.fillSprite(BG_COLOR);
     textWeightNutri.setTextDatum(CC_DATUM);
     textWeightNutri.setFreeFont(&FreeSans12pt7b);
-    textWeightNutri.setTextColor(TFT_WHITE, TFT_BLACK);
-    textWeightNutri.drawString(text_value, 85, 32, 6);  //koordinat berat yg 2 variabel tengah
-    textWeightNutri.pushSprite(8, 60);
+    textWeightNutri.setTextColor(TFT_BLACK, TFT_WHITE);
+    textWeightNutri.drawString(text_value, 85, 32, 1);  //koordinat berat yg 2 variabel tengah
+    textWeightNutri.pushSprite(8, 55);
   } else if(_screen == UNIVERSAL_WEIGHT_SCREEN){ 
     textWeightUniv.fillSprite(BG_COLOR); 
     textWeightUniv.setTextDatum(CC_DATUM);
@@ -278,8 +278,9 @@ void LCDClass::updateValue(float weight_value){
 
 void LCDClass::updateCode(String code){
   tft.setFreeFont(&FreeSans9pt7b);
+  // tft.setTextColor(TFT_BLACK, TFT_WHITE);
   tft.setTextDatum(TL_DATUM);
-  tft.drawString(code, 192, 16, 1);
+  tft.drawString(code, 192, 18, 1);
 }
 
 void LCDClass::showFood(Food_type_t food){
