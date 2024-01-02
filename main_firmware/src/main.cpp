@@ -35,6 +35,7 @@ void loop() {
 
   if(lcd.getScreen() == DASHBOARD_SCREEN){
     if(lcd.touchUpdate()){
+      digitalWrite(42, HIGH);
       if(lcd.getMode() == 1){
         lcd.show(NUTRITION_WEIGHT_SCREEN);
       } else if(lcd.getMode() == 2){
@@ -42,6 +43,8 @@ void loop() {
       } else if(lcd.getMode() == 3){
         lcd.show(SETTING_SCREEN);
       }
+      delay(50);
+      digitalWrite(42, LOW);
     }
 
   } else if(lcd.getScreen() == NUTRITION_WEIGHT_SCREEN){
@@ -53,6 +56,8 @@ void loop() {
     }
 
     if(lcd.touchUpdate()){
+      digitalWrite(42, HIGH);
+
       if(lcd.getKey() < 10){
         if(codeDump2 < 1){
           codeDump2 = lcd.getKey();
@@ -98,6 +103,8 @@ void loop() {
         lcd.show(DASHBOARD_SCREEN);
         lcd.updateBattery(BATTERY_FULL);
       }
+      delay(50);
+      digitalWrite(42, LOW);
     }
 
   } else if(lcd.getScreen() == UNIVERSAL_WEIGHT_SCREEN){
@@ -109,22 +116,30 @@ void loop() {
     }
     
     if(lcd.touchUpdate()){
+      digitalWrite(42, HIGH);
       if(lcd.getBack()){
         lcd.show(DASHBOARD_SCREEN);
         lcd.updateBattery(BATTERY_FULL);
       }
+      delay(50);
+      digitalWrite(42, LOW);
     }
 
   } else if(lcd.getScreen() == SETTING_SCREEN){
     if(lcd.touchUpdate()){
+      digitalWrite(42, HIGH);
+
       if(lcd.getBack()){
         lcd.show(DASHBOARD_SCREEN);
         lcd.updateBattery(BATTERY_FULL);
       }
+      delay(50);
+      digitalWrite(42, LOW);
     }
 
   } else if(lcd.getScreen() == TOTAL_NUTRITION_SCREEN){
     if(lcd.touchUpdate()){
+      digitalWrite(42, HIGH);
       if(lcd.getHome()){
         lcd.show(DASHBOARD_SCREEN);
         lcd.updateBattery(BATTERY_FULL);
@@ -133,6 +148,8 @@ void loop() {
       if(lcd.getBack()){
         lcd.show(NUTRITION_WEIGHT_SCREEN);
       }
+      delay(50);
+      digitalWrite(42, LOW);
     }
   }
   
