@@ -73,7 +73,7 @@ void LCDClass::calibration(){
 void LCDClass::init(){
   tft.init();
   tft.setRotation(3);
-  pinMode(21, INPUT);
+  pinMode(5, INPUT);
 
   calibration();
 
@@ -162,47 +162,47 @@ void LCDClass::updateBattery(Battery_Level_t batt_level){
 }
 
 bool LCDClass::touchUpdate(){
-  if(digitalRead(21)) return false;
+  if(digitalRead(5)) return false;
 
   uint16_t t_x, t_y;
   tft.getTouchRaw(&t_x, &t_y);
   tft.convertRawXY(&t_x, &t_y);
 
-  if(t_x >= 191 && t_x <= 221 && t_y >= 55 && t_y <=86){
+  if(t_x >= 5 && t_x <= 111 && t_y >= 96 && t_y <= 127){
     _key = 7;
     Serial.println("7");
-  } else if(t_x >= 235 && t_x <= 265 && t_y >= 55 && t_y <=86){
+  } else if(t_x >= 112 && t_x <= 207 && t_y >= 96 && t_y <=127){
     _key = 8;
     Serial.println("8");
-  } else if(t_x >= 279 && t_x <= 309 && t_y >= 55 && t_y <=86){
+  } else if(t_x >= 218 && t_x <= 314 && t_y >= 96 && t_y <=127){
     _key = 9;
     Serial.println("9");
-  } else if(t_x >= 191 && t_x <= 221 && t_y >= 101 && t_y <=131){
+  } else if(t_x >= 5 && t_x <= 111 && t_y >= 132 && t_y <=162){
     _key = 4;
     Serial.println("4");
-  } else if(t_x >= 235 && t_x <= 265 && t_y >= 101 && t_y <=131){
+  } else if(t_x >= 112 && t_x <= 207 && t_y >= 132 && t_y <=162){
     _key = 5;
     Serial.println("5");
-  } else if(t_x >= 279 && t_x <= 309 && t_y >= 101 && t_y <=131){
+  } else if(t_x >= 218 && t_x <= 314 && t_y >= 132 && t_y <=162){
     _key = 6;
     Serial.println("6");
-  } else if(t_x >= 191 && t_x <= 221 && t_y >= 147 && t_y <=177){
+  } else if(t_x >= 5 && t_x <= 111 && t_y >= 167 && t_y <=198){
     _key = 1;
     Serial.println("1");
-  } else if(t_x >= 235 && t_x <= 265 && t_y >= 147 && t_y <=177){
+  } else if(t_x >= 112 && t_x <= 207 && t_y >= 167 && t_y <=198){
     _key = 2;
     Serial.println("2");
-  } else if(t_x >= 279 && t_x <= 309 && t_y >= 147 && t_y <=177){
+  } else if(t_x >= 218 && t_x <= 314 && t_y >= 167 && t_y <=198){
     _key = 3;
     Serial.println("3");
-  } else if(t_x >= 191 && t_x <= 221 && t_y >= 193 && t_y <=223){
+  } else if(t_x >= 5 && t_x <= 111 && t_y >= 202 && t_y <=233){
     _key = 0;
     Serial.println("0");
   } else{
     _key = 99;
   }
   
-  if(t_x >= 235 && t_x <= 309 && t_y >= 193 && t_y <=223){
+  if(t_x >= 112 && t_x <= 314 && t_y >= 202 && t_y <=233){
     _enter = true;
     Serial.println("Enter");
   } else{
@@ -223,7 +223,7 @@ bool LCDClass::touchUpdate(){
     _next = false;
   }
 
-  if(t_x >= 289 && t_x <= 309 && t_y >= 15 && t_y <=36){
+  if(t_x >= 272 && t_x <= 302 && t_y >= 66 && t_y <=87){
     _delete = true;
     Serial.println("Delete");
   } else{
@@ -280,7 +280,7 @@ void LCDClass::updateCode(String code){
   tft.setFreeFont(&FreeSans9pt7b);
   // tft.setTextColor(TFT_BLACK, TFT_WHITE);
   tft.setTextDatum(TL_DATUM);
-  tft.drawString(code, 192, 18, 1);
+  tft.drawString(code, 10, 45, 1);
 }
 
 void LCDClass::showFood(Food_type_t food){
