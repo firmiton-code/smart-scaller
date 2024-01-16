@@ -73,7 +73,7 @@ void LCDClass::calibration(){
 void LCDClass::init(){
   tft.init();
   tft.setRotation(3);
-  pinMode(21, INPUT);
+  pinMode(5, INPUT);
 
   calibration();
 
@@ -125,6 +125,9 @@ void LCDClass::show(Screen_position_t screen){
     case NUTRITION_WEIGHT_SCREEN :
       tft.pushImage(0, 0, 320, 240, Code_Input);
       break;
+    case NUTRITION_SCALER_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Code_Success);
+      break;
     case TOTAL_NUTRITION_SCREEN :
       tft.pushImage(0, 0, 320, 240, Output);
       break;
@@ -136,7 +139,7 @@ void LCDClass::show(Screen_position_t screen){
       tft.pushImage(0, 0, 320, 240, Boot);
       break;
   }
-  
+  Serial.println(screen);
   _screen = screen;
 }
 
@@ -162,82 +165,89 @@ void LCDClass::updateBattery(Battery_Level_t batt_level){
 }
 
 bool LCDClass::touchUpdate(){
-  if(digitalRead(21)) return false;
+  if(digitalRead(5)) return false;
 
   uint16_t t_x, t_y;
   tft.getTouchRaw(&t_x, &t_y);
   tft.convertRawXY(&t_x, &t_y);
 
-  if(t_x >= 191 && t_x <= 221 && t_y >= 55 && t_y <=86){
+  if(t_x >= 170 && t_x <= 215 && t_y >= 10 && t_y <= 61){
     _key = 7;
     Serial.println("7");
-  } else if(t_x >= 235 && t_x <= 265 && t_y >= 55 && t_y <=86){
+  } else if(t_x >= 220 && t_x <= 264 && t_y >= 10 && t_y <= 61){
     _key = 8;
     Serial.println("8");
-  } else if(t_x >= 279 && t_x <= 309 && t_y >= 55 && t_y <=86){
+  } else if(t_x >= 268 && t_x <= 314 && t_y >= 10 && t_y <= 61){
     _key = 9;
     Serial.println("9");
-  } else if(t_x >= 191 && t_x <= 221 && t_y >= 101 && t_y <=131){
+  } else if(t_x >= 170 && t_x <= 215 && t_y >= 66 && t_y <= 117){
     _key = 4;
     Serial.println("4");
-  } else if(t_x >= 235 && t_x <= 265 && t_y >= 101 && t_y <=131){
+  } else if(t_x >= 220 && t_x <= 264 && t_y >= 66 && t_y <= 117){
     _key = 5;
     Serial.println("5");
-  } else if(t_x >= 279 && t_x <= 309 && t_y >= 101 && t_y <=131){
+  } else if(t_x >= 268 && t_x <= 314 && t_y >= 66 && t_y <= 117){
     _key = 6;
     Serial.println("6");
-  } else if(t_x >= 191 && t_x <= 221 && t_y >= 147 && t_y <=177){
+  } else if(t_x >= 170 && t_x <= 215 && t_y >= 123 && t_y <= 173){
     _key = 1;
     Serial.println("1");
-  } else if(t_x >= 235 && t_x <= 265 && t_y >= 147 && t_y <=177){
+  } else if(t_x >= 220 && t_x <= 264 && t_y >= 123 && t_y <= 173){
     _key = 2;
     Serial.println("2");
-  } else if(t_x >= 279 && t_x <= 309 && t_y >= 147 && t_y <=177){
+  } else if(t_x >= 268 && t_x <= 314 && t_y >= 123 && t_y <= 173){
     _key = 3;
     Serial.println("3");
-  } else if(t_x >= 191 && t_x <= 221 && t_y >= 193 && t_y <=223){
+  } else if(t_x >= 170 && t_x <= 215 && t_y >= 179 && t_y <=230){
     _key = 0;
     Serial.println("0");
   } else{
     _key = 99;
   }
   
-  if(t_x >= 235 && t_x <= 309 && t_y >= 193 && t_y <=223){
+  if(t_x >= 220 && t_x <= 314 && t_y >= 179 && t_y <=230){
     _enter = true;
     Serial.println("Enter");
   } else{
     _enter = false;
   }
 
-  if(t_x >= 17 && t_x <= 42 && t_y >= 17 && t_y <=42){
+  if(t_x >= 17 && t_x <= 52 && t_y >= 17 && t_y <= 52){
     _back = true;
     Serial.println("Back");
   } else{
     _back = false;
   }
   
-  if(t_x >= 303 && t_x <= 328 && t_y >= 17 && t_y <=42){
+  if(t_x >= 64 && t_x <= 99 && t_y >= 17 && t_y <= 52){
     _next = true;
     Serial.println("Next");
   } else{
     _next = false;
   }
 
-  if(t_x >= 289 && t_x <= 309 && t_y >= 15 && t_y <=36){
+  if(t_x >= 100 && t_x <= 150 && t_y >= 179 && t_y <=230){
     _delete = true;
     Serial.println("Delete");
   } else{
     _delete = false;
   }
   
-  if(t_x >= 169 && t_x <= 194 && t_y >= 17 && t_y <=42){
+  if(t_x >= 241 && t_x <= 307 && t_y >= 194 && t_y <= 224){
     _total = true;
     Serial.println("Total");
   } else{
     _total = false;
   }
 
-  if(t_x >= 281 && t_x <= 301 && t_y >= 19 && t_y <=39){
+  if(t_x >= 160 && t_x <= 226 && t_y >= 194 && t_y <= 224){
+    _reset = true;
+    Serial.println("Reset");
+  } else{
+    _reset = false;
+  }
+
+  if(t_x >= 303 && t_x <= 338 && t_y >= 17 && t_y <= 52){
     _home = true;
     Serial.println("Home");
   } else{
@@ -280,20 +290,56 @@ void LCDClass::updateCode(String code){
   tft.setFreeFont(&FreeSans9pt7b);
   // tft.setTextColor(TFT_BLACK, TFT_WHITE);
   tft.setTextDatum(TL_DATUM);
-  tft.drawString(code, 192, 18, 1);
+  tft.drawString(code, 15, 203, 1);
 }
 
 void LCDClass::showFood(Food_type_t food){
   switch (food){
-    case BANANA :
-      tft.pushImage(57, 111, 70, 70, Icon_Makanan_Pisang, BG_COLOR);
+    case CEREALIA :
+      tft.pushImage(43, 95, 80, 80, Cerealia, BG_COLOR);
+      break;
+    case DRINK :
+      tft.pushImage(43, 95, 80, 80, Drink, BG_COLOR);
+      break;
+    case EGG :
+      tft.pushImage(43, 95, 80, 80, Egg, BG_COLOR);
+      break;
+    case FISH :
+      tft.pushImage(43, 95, 80, 80, Fish, BG_COLOR);
+      break;
+    case FRUITS :
+      tft.pushImage(43, 95, 80, 80, Fruits, BG_COLOR);
+      break;
+    case MEAT :
+      tft.pushImage(43, 95, 80, 80, Milk, BG_COLOR);
+      break;
+    case MILK :
+      tft.pushImage(43, 95, 80, 80, Milk, BG_COLOR);
+      break;
+    case NUTS :
+      tft.pushImage(43, 95, 80, 80, Nuts, BG_COLOR);
+      break;
+    case OIL :
+      tft.pushImage(43, 95, 80, 80, Oil, BG_COLOR);
+      break;
+    case ROOTS :
+      tft.pushImage(43, 95, 80, 80, Roots, BG_COLOR);
+      break;
+    case SPICE :
+      tft.pushImage(43, 95, 80, 80, Spice, BG_COLOR);
+      break;
+    case SUGAR :
+      tft.pushImage(43, 95, 80, 80, Sugar, BG_COLOR);
+      break;
+    case VEGETABLE :
+      tft.pushImage(43, 95, 80, 80, Vegetable, BG_COLOR);
       break;
     case UNKNOWN :
-      tft.pushImage(57, 111, 70, 70, Icon_Makanan_Unknown, BG_COLOR);
+      tft.pushImage(43, 95, 80, 80, Unknown, BG_COLOR);
       break;
 
     default :
-      tft.pushImage(57, 111, 70, 70, Icon_Makanan_Unknown, BG_COLOR);
+      tft.pushImage(43, 95, 80, 80, Unknown, BG_COLOR);
       break;
   }
 }
@@ -320,6 +366,10 @@ bool LCDClass::getTotal(){
 
 bool LCDClass::getHome(){
   return _home;
+}
+
+bool LCDClass::getReset(){
+  return _reset;
 }
 
 int LCDClass::getKey(){

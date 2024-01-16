@@ -24,7 +24,19 @@
 #define NUMBER_TEXT 7
 
 typedef enum {
-  BANANA,
+  CEREALIA,
+  DRINK,
+  EGG,
+  FISH,
+  FRUITS,
+  MEAT,
+  MILK,
+  NUTS,
+  OIL,
+  ROOTS,
+  SPICE,
+  SUGAR,
+  VEGETABLE,
   UNKNOWN
 } Food_type_t;
 
@@ -32,6 +44,7 @@ typedef enum {
   DASHBOARD_SCREEN,
   UNIVERSAL_WEIGHT_SCREEN,
   NUTRITION_WEIGHT_SCREEN,
+  NUTRITION_SCALER_SCREEN,
   TOTAL_NUTRITION_SCREEN,
   SETTING_SCREEN
 } Screen_position_t;
@@ -57,6 +70,7 @@ class LCDClass{
     bool _next = false;
     bool _delete = false;
     bool _total = false;
+    bool _reset = false;
     bool _home = false;
     int _mode = 0;
 
@@ -82,6 +96,7 @@ class LCDClass{
     bool getDelete();
     bool getTotal();
     bool getHome();
+    bool getReset();
     int getKey();
     int getMode();  
 
