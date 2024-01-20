@@ -82,6 +82,7 @@ class LCDClass{
     void reset();
     void updateBattery(Battery_Level_t batt_level);
     void show(Screen_position_t screen);
+    void showTotal(String value1, String value2, String value3, String value4, String value5, String value6);
     void updateValue(float weight_value);
     void updateCode(String code);
     void showFood(Food_type_t food);

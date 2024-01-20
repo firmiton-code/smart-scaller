@@ -1,16 +1,8 @@
 #include <Arduino.h>
-#include "display/lcd.h"
-#include "sensor/hx711.h"
-#include "data/_data.h"
+#include "device_config.h"
 
-bool state = false;
-String code;
-int count = 0;
-String inputName;
-String inputWeight, inputAir, inputEnergy, inputProtein, inputLemak, inputKarbo, inputSerat, inputCarbing, inputType;
-Food_type_t inputFood;
-float rawWeight, rawAir, rawEnergy, rawProtein, rawLemak, rawKarbo, rawSerat, rawCarbing;
-unsigned long lastRead;
+//comment for real measurement
+bool RANDOM_TEST = true;
 
 void setup() {
   // put your setup code here, to run once:
@@ -27,13 +19,24 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  while(lcd.touchUpdate()){
+  if(lcd.touchUpdate()){
     digitalWrite(42, HIGH);
 
     if(lcd.getScreen() == DASHBOARD_SCREEN){
       if(lcd.getMode() == 1){
         lcd.show(NUTRITION_WEIGHT_SCREEN);
         lcd.showFood(UNKNOWN);
+
+        code = "";
+        totalWeight = 0;
+        totalAir = 0;
+        totalCarbing = 0;
+        totalEnergy = 0;
+        totalKarbo = 0;
+        totalLemak = 0;
+        totalProtein = 0;
+        totalSerat = 0;
+
       } else if(lcd.getMode() == 2){
         lcd.show(UNIVERSAL_WEIGHT_SCREEN);
       } else if(lcd.getMode() == 3){
@@ -4674,7 +4677,6 @@ void loop() {
       }
 
       if(lcd.getBack()){
-        code = "";
         lcd.show(DASHBOARD_SCREEN);
       }
 
@@ -4684,16 +4686,28 @@ void loop() {
     
     if(lcd.getScreen() == NUTRITION_SCALER_SCREEN){
       if(lcd.getBack()){
+        code = "";
         lcd.show(NUTRITION_WEIGHT_SCREEN);
         lcd.showFood(UNKNOWN);
       }
 
       if(lcd.getTotal()){
         lcd.show(TOTAL_NUTRITION_SCREEN);
+        lcd.showTotal(String(totalWeight, 2)+" gr", String(totalEnergy,2)+" kkal", String(totalLemak, 2)+" gr", String(totalKarbo, 2)+" gr", String(totalCarbing, 2)+" gr", String(totalProtein, 2)+" gr");
       }
 
       if(lcd.getReset()){
         code = "";
+        
+        totalWeight = 0;
+        totalAir = 0;
+        totalCarbing = 0;
+        totalEnergy = 0;
+        totalKarbo = 0;
+        totalLemak = 0;
+        totalProtein = 0;
+        totalSerat = 0;
+        
         lcd.show(NUTRITION_WEIGHT_SCREEN);
         lcd.showFood(UNKNOWN);
       }
@@ -4701,6 +4715,13 @@ void loop() {
       if(lcd.getNext()){
         lcd.show(NUTRITION_WEIGHT_SCREEN);
         lcd.showFood(UNKNOWN);
+
+        totalWeight+=rawWeight;
+        totalEnergy+=rawEnergy;
+        totalLemak+=rawLemak;
+        totalKarbo+=rawKarbo;
+        totalCarbing+=rawCarbing;
+        totalProtein+=rawProtein;
       }
 
       delay(250);
@@ -4738,7 +4759,6 @@ void loop() {
       } 
       
       if(lcd.getHome()){
-        code = "";
         lcd.show(DASHBOARD_SCREEN);
       }
 
@@ -4759,6 +4779,8 @@ void loop() {
         lcd.updateValue(weight_load);
       }
       
+      if(RANDOM_TEST) rawWeight = random(0.00, 1000.00);
+
       rawAir = inputAir.toFloat() * (rawWeight / 100.0);
       rawEnergy = inputEnergy.toFloat() * (rawWeight / 100.0);
       rawProtein = inputProtein.toFloat() * (rawWeight / 100.0);
@@ -4767,20 +4789,24 @@ void loop() {
       rawSerat = inputSerat.toFloat() * (rawWeight / 100.0);
       rawCarbing = inputCarbing.toFloat() * (rawWeight / 100.0);
 
-      lcd.showValue(String(rawWeight, 2), String(rawProtein, 2), String(rawLemak, 2), String(rawKarbo, 2), String(rawCarbing, 2), String(rawProtein, 2));
+      lcd.showValue(String(rawWeight, 2)+" gr", String(rawEnergy, 2)+" kkal", String(rawLemak, 2)+" gr", String(rawKarbo, 2)+" gr", String(rawCarbing, 2)+" gr", String(rawProtein, 2)+" gr");
     }
 
     if(lcd.getScreen() == UNIVERSAL_WEIGHT_SCREEN){
+      float weight_dump = 0.00;
       if(load.update()) {
-        float weight_load = load.weight();
-        if(weight_load < 0.00) weight_load = 0.00;
-        Serial.println(weight_load);
-        lcd.updateValue(weight_load);
+        weight_dump = load.weight();
+        if(weight_dump < 0.00) weight_dump = 0.00;
       }
+
+      if(RANDOM_TEST) weight_dump = random(0.00, 9999.00);
+      
+      Serial.println(weight_dump);
+      lcd.updateValue(weight_dump);
     }
 
     if(lcd.getScreen() == DASHBOARD_SCREEN){
-      int bat = map(analogReadMilliVolts(7), 0.00, 3.30, 0.00, 100.00);
+      int bat = map(analogReadMilliVolts(7), 0, 3300, 0, 100);
       if(bat > 70) lcd.updateBattery(BATTERY_FULL);
       else if(bat > 30 && bat <= 70) lcd.updateBattery(BATTERY_HALF);
       else lcd.updateBattery(BATTERY_LOW);

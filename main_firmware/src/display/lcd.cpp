@@ -95,12 +95,24 @@ void LCDClass::showValue(String value1, String value2, String value3, String val
   tft.setFreeFont(&FreeSans9pt7b);
   tft.setTextDatum(BR_DATUM);
 
-  tft.drawString(value1, 256, 73, 1);
-  tft.drawString(value2, 256, 104, 1);
-  tft.drawString(value3, 256, 129, 1);
-  tft.drawString(value4, 256, 154, 1);
-  tft.drawString(value5, 256, 179, 1);
-  tft.drawString(value6, 256, 204, 1);
+  tft.drawString(value1, 300, 60, 1);
+  tft.drawString(value2, 300, 95, 1);
+  tft.drawString(value3, 300, 117, 1);
+  tft.drawString(value4, 300, 140, 1);
+  tft.drawString(value5, 300, 162, 1);
+  tft.drawString(value6, 300, 184, 1);
+}
+
+void LCDClass::showTotal(String value1, String value2, String value3, String value4, String value5, String value6){
+  tft.setFreeFont(&FreeSans9pt7b);
+  tft.setTextDatum(BR_DATUM);
+
+  tft.drawString(value1, 265, 85, 1);
+  tft.drawString(value2, 265, 115, 1);
+  tft.drawString(value3, 265, 140, 1);
+  tft.drawString(value4, 265, 165, 1);
+  tft.drawString(value5, 265, 190, 1);
+  tft.drawString(value6, 265, 215, 1);
 }
 
 void LCDClass::loading(int percentage){
@@ -268,7 +280,7 @@ bool LCDClass::touchUpdate(){
 }
 
 void LCDClass::updateValue(float weight_value){
-  String text_value = String(weight_value, 2);
+  String text_value =  weight_value < 800.00 ? String(weight_value, 2) + " gr" : String((weight_value/1000.00), 2) + " kg";
   if(_screen == NUTRITION_WEIGHT_SCREEN){
     textWeightNutri.fillSprite(BG_COLOR);
     textWeightNutri.setTextDatum(CC_DATUM);
@@ -279,9 +291,9 @@ void LCDClass::updateValue(float weight_value){
   } else if(_screen == UNIVERSAL_WEIGHT_SCREEN){ 
     textWeightUniv.fillSprite(BG_COLOR); 
     textWeightUniv.setTextDatum(CC_DATUM);
-    textWeightUniv.setFreeFont(&FreeSans9pt7b);
+    textWeightUniv.setFreeFont(&FreeSans24pt7b);
     textWeightUniv.setTextColor(TFT_BLACK, TFT_WHITE);
-    textWeightUniv.drawString(text_value, 140, 35, 6);
+    textWeightUniv.drawString(text_value, 140, 35, 1);
     textWeightUniv.pushSprite(30, 60);
   }
 }
