@@ -73,7 +73,7 @@ void LCDClass::calibration(){
 void LCDClass::init(){
   tft.init();
   tft.setRotation(3);
-  pinMode(5, INPUT);
+  pinMode(21, INPUT);
 
   calibration();
 
@@ -146,7 +146,16 @@ void LCDClass::show(Screen_position_t screen){
     case SETTING_SCREEN :
       tft.pushImage(0, 0, 320, 240, Setting);
       break;
-    
+    case CALIBRATION_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Calibration);
+      break;
+    case SAVED_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Save_Calibration);
+      break;
+    case COMING_SOON_SCREEN :
+      tft.pushImage(0, 0, 320, 240, soon);
+      break;
+
     default :
       tft.pushImage(0, 0, 320, 240, Boot);
       break;
@@ -177,7 +186,7 @@ void LCDClass::updateBattery(Battery_Level_t batt_level){
 }
 
 bool LCDClass::touchUpdate(){
-  if(digitalRead(5)) return false;
+  if(digitalRead(21)) return false;
 
   uint16_t t_x, t_y;
   tft.getTouchRaw(&t_x, &t_y);
@@ -266,6 +275,20 @@ bool LCDClass::touchUpdate(){
     _home = false;
   }
 
+  if(t_x >= 49 && t_x <= 104 && t_y >= 173 && t_y <= 202){
+    _minus = true;
+    Serial.println("Minus");
+  } else{
+    _minus = false;
+  }
+
+  if(t_x >= 215 && t_x <= 270 && t_y >= 173 && t_y <= 202){
+    _plus = true;
+    Serial.println("Plus");
+  } else{
+    _plus = false;
+  }
+
   if(t_x >= 20 && t_x <= 150 && t_y >= 20 && t_y <=220){
     _mode = 1;
   } else if(t_x >= 170 && t_x <= 300 && t_y >= 20 && t_y <=149){
@@ -303,6 +326,14 @@ void LCDClass::updateCode(String code){
   // tft.setTextColor(TFT_BLACK, TFT_WHITE);
   tft.setTextDatum(TL_DATUM);
   tft.drawString(code, 15, 203, 1);
+}
+
+void LCDClass::updateCal(String cal){
+  tft.setFreeFont(&FreeSans9pt7b);
+  // tft.setTextColor(TFT_BLACK, TFT_WHITE);
+  String prnt = " "+cal+" ";
+  tft.setTextDatum(CC_DATUM);
+  tft.drawString(prnt, 159, 187, 1);
 }
 
 void LCDClass::showFood(Food_type_t food){
@@ -382,6 +413,14 @@ bool LCDClass::getHome(){
 
 bool LCDClass::getReset(){
   return _reset;
+}
+
+bool LCDClass::getPlus(){
+  return _plus;
+}
+
+bool LCDClass::getMinus(){
+  return _minus;
 }
 
 int LCDClass::getKey(){

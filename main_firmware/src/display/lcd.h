@@ -46,7 +46,10 @@ typedef enum {
   NUTRITION_WEIGHT_SCREEN,
   NUTRITION_SCALER_SCREEN,
   TOTAL_NUTRITION_SCREEN,
-  SETTING_SCREEN
+  SETTING_SCREEN,
+  CALIBRATION_SCREEN,
+  SAVED_SCREEN,
+  COMING_SOON_SCREEN
 } Screen_position_t;
 
 typedef enum {
@@ -72,6 +75,8 @@ class LCDClass{
     bool _total = false;
     bool _reset = false;
     bool _home = false;
+    bool _plus = false;
+    bool _minus = false;
     int _mode = 0;
 
   public:
@@ -85,6 +90,7 @@ class LCDClass{
     void showTotal(String value1, String value2, String value3, String value4, String value5, String value6);
     void updateValue(float weight_value);
     void updateCode(String code);
+    void updateCal(String cal);
     void showFood(Food_type_t food);
 
     // Touch Function
@@ -98,6 +104,8 @@ class LCDClass{
     bool getTotal();
     bool getHome();
     bool getReset();
+    bool getPlus();
+    bool getMinus();
     int getKey();
     int getMode();  
 

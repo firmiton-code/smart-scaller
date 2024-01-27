@@ -5,6 +5,7 @@
 #include "display/lcd.h"
 #include "sensor/hx711.h"
 #include "data/_data.h"
+#include "data/credentials.h"
 
 bool state = false;
 String code;
@@ -16,5 +17,9 @@ float rawWeight, rawAir, rawEnergy, rawProtein, rawLemak, rawKarbo, rawSerat, ra
 unsigned long lastRead;
 
 float totalWeight, totalAir, totalEnergy, totalProtein, totalLemak, totalKarbo, totalSerat, totalCarbing;
+
+float dumpPlate;
+
+double _calibration;
 
 #endif

@@ -32,5 +32,8 @@
 #include "icon/Vegetable.h"
 
 #include "assets/Setting.h"
+#include "assets/Calibration.h"
+#include "assets/Save_Calibration.h"
+#include "assets/soon.h"
 
 #endif // LCD_ASSETS_h

@@ -2,7 +2,7 @@
 #include "device_config.h"
 
 //comment for real measurement
-bool RANDOM_TEST = true;
+bool RANDOM_TEST = false;
 
 void setup() {
   // put your setup code here, to run once:
@@ -12,7 +12,13 @@ void setup() {
   load.begin();
 
   pinMode(7, INPUT);
-  pinMode(42, OUTPUT);
+  
+  ledcSetup(0, 4096, 12);
+  ledcAttachPin(42, 0);
+  ledcWriteTone(0, 0);
+  ledcWrite(0, 4096);
+
+  _calibration = data.read("cal").toFloat();
 
   lcd.show(DASHBOARD_SCREEN);
 }
@@ -20,8 +26,8 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   if(lcd.touchUpdate()){
-    digitalWrite(42, HIGH);
-
+    ledcWriteTone(0, 2048);
+    
     if(lcd.getScreen() == DASHBOARD_SCREEN){
       if(lcd.getMode() == 1){
         lcd.show(NUTRITION_WEIGHT_SCREEN);
@@ -37,10 +43,14 @@ void loop() {
         totalProtein = 0;
         totalSerat = 0;
 
+        dumpPlate = 0;
+
       } else if(lcd.getMode() == 2){
         lcd.show(UNIVERSAL_WEIGHT_SCREEN);
       } else if(lcd.getMode() == 3){
-        lcd.show(SETTING_SCREEN);
+        // lcd.show(SETTING_SCREEN);
+        lcd.show(CALIBRATION_SCREEN);
+        lcd.updateCal(String(_calibration));
       }
 
     } else if(lcd.getScreen() == NUTRITION_WEIGHT_SCREEN){
@@ -4641,10 +4651,10 @@ void loop() {
             break;
         }
         
-        float protein = inputProtein.toFloat() * 100.0;
-        Serial.println(inputName);
-        Serial.println(inputName.length());
-        Serial.println(protein);
+        // float protein = inputProtein.toFloat() * 100.0;
+        // Serial.println(inputName);
+        // Serial.println(inputName.length());
+        // Serial.println(protein);
         if(inputType != "") lcd.show(NUTRITION_SCALER_SCREEN);
 
         if(inputType == "MINUMAN") inputFood = DRINK;
@@ -4742,8 +4752,39 @@ void loop() {
         lcd.show(DASHBOARD_SCREEN);
       }
 
+      //button wifi
+
+      //button calibrate
+
       delay(250);
 
+    }
+
+    if(lcd.getScreen() == CALIBRATION_SCREEN){
+      if(lcd.getPlus()){
+        _calibration+=0.01;
+        Serial.println(_calibration);
+        lcd.updateCal(String(_calibration));
+      }
+
+      if(lcd.getMinus()){
+        _calibration-=0.01;
+        Serial.println(_calibration);
+        lcd.updateCal(String(_calibration));
+      }
+
+      if(lcd.getBack()){
+        lcd.show(DASHBOARD_SCREEN);
+      }
+
+      if(lcd.getHome()){
+        data.save("cal", String(_calibration, 2));
+        lcd.show(SAVED_SCREEN);
+        delay(2000);
+        lcd.show(DASHBOARD_SCREEN);
+      }
+
+      delay(250);
     }
     
     if(lcd.getScreen() == TOTAL_NUTRITION_SCREEN){
@@ -4766,17 +4807,30 @@ void loop() {
 
     }
 
-    digitalWrite(42, LOW);
+    ledcWriteTone(0, 0);
   }
 
   if(millis() - lastRead > 500){
+    if(lcd.getScreen() == NUTRITION_WEIGHT_SCREEN){
+      float weight_dump = 0.00;
+      if(load.update()) {
+        weight_dump = load.weight() + _calibration;
+        if(weight_dump < 0.00) weight_dump = 0.00;
+      }
+
+      if(RANDOM_TEST) weight_dump = random(0.00, 9999.00);
+      
+      dumpPlate = weight_dump;
+      Serial.println(dumpPlate);      
+    }
+    
     if(lcd.getScreen() == NUTRITION_SCALER_SCREEN){
       if(load.update()) {
-        float weight_load = load.weight();
+        float weight_load = load.weight() + _calibration;
         if(weight_load < 0.00) weight_load = 0.00;
-        rawWeight = weight_load;
-        Serial.println(weight_load);
-        lcd.updateValue(weight_load);
+        rawWeight = weight_load > 0.00 ? weight_load - dumpPlate : weight_load;
+        Serial.println(rawWeight);
+        lcd.updateValue(rawWeight);
       }
       
       if(RANDOM_TEST) rawWeight = random(0.00, 1000.00);
@@ -4795,7 +4849,20 @@ void loop() {
     if(lcd.getScreen() == UNIVERSAL_WEIGHT_SCREEN){
       float weight_dump = 0.00;
       if(load.update()) {
-        weight_dump = load.weight();
+        weight_dump = load.weight() + _calibration;
+        if(weight_dump < 0.00) weight_dump = 0.00;
+      }
+
+      if(RANDOM_TEST) weight_dump = random(0.00, 9999.00);
+      
+      Serial.println(weight_dump);
+      lcd.updateValue(weight_dump);
+    }
+
+    if(lcd.getScreen() == CALIBRATION_SCREEN){
+      float weight_dump = 0.00;
+      if(load.update()) {
+        weight_dump = load.weight() + _calibration;
         if(weight_dump < 0.00) weight_dump = 0.00;
       }
 
