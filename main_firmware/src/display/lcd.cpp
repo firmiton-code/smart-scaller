@@ -82,7 +82,7 @@ void LCDClass::init(){
   tft.setFreeFont(&FreeSans12pt7b);
   tft.setTextColor(TFT_BLACK, BG_COLOR);
   
-  textWeightNutri.createSprite(170, 70);
+  textWeightNutri.createSprite(150, 30);
   textCode.createSprite(100, 30);
   textWeightUniv.createSprite(280, 70);
 
@@ -268,21 +268,21 @@ bool LCDClass::touchUpdate(){
     _reset = false;
   }
 
-  if(t_x >= 303 && t_x <= 338 && t_y >= 17 && t_y <= 52){
+  if(t_x >= 283 && t_x <= 338 && t_y >= 7 && t_y <= 52){
     _home = true;
     Serial.println("Home");
   } else{
     _home = false;
   }
 
-  if(t_x >= 49 && t_x <= 104 && t_y >= 173 && t_y <= 202){
+  if(t_x >= 49 && t_x <= 104 && t_y >= 163 && t_y <= 212){
     _minus = true;
     Serial.println("Minus");
   } else{
     _minus = false;
   }
 
-  if(t_x >= 215 && t_x <= 270 && t_y >= 173 && t_y <= 202){
+  if(t_x >= 215 && t_x <= 270 && t_y >= 163 && t_y <= 212){
     _plus = true;
     Serial.println("Plus");
   } else{
@@ -304,20 +304,20 @@ bool LCDClass::touchUpdate(){
 
 void LCDClass::updateValue(float weight_value){
   String text_value =  weight_value < 800.00 ? String(weight_value, 2) + " gr" : String((weight_value/1000.00), 2) + " kg";
-  if(_screen == NUTRITION_WEIGHT_SCREEN){
+  if(_screen == NUTRITION_WEIGHT_SCREEN || _screen == NUTRITION_SCALER_SCREEN){
     textWeightNutri.fillSprite(BG_COLOR);
     textWeightNutri.setTextDatum(CC_DATUM);
     textWeightNutri.setFreeFont(&FreeSans12pt7b);
     textWeightNutri.setTextColor(TFT_BLACK, TFT_WHITE);
-    textWeightNutri.drawString(text_value, 85, 32, 1);  //koordinat berat yg 2 variabel tengah
-    textWeightNutri.pushSprite(8, 55);
-  } else if(_screen == UNIVERSAL_WEIGHT_SCREEN){ 
+    textWeightNutri.drawString(text_value, 75, 15, 1);  //koordinat berat yg 2 variabel tengah
+    textWeightNutri.pushSprite(8, 53);
+  } else if(_screen == UNIVERSAL_WEIGHT_SCREEN || _screen == CALIBRATION_SCREEN){ 
     textWeightUniv.fillSprite(BG_COLOR); 
     textWeightUniv.setTextDatum(CC_DATUM);
     textWeightUniv.setFreeFont(&FreeSans24pt7b);
     textWeightUniv.setTextColor(TFT_BLACK, TFT_WHITE);
     textWeightUniv.drawString(text_value, 140, 35, 1);
-    textWeightUniv.pushSprite(30, 60);
+    textWeightUniv.pushSprite(30, 55);
   }
 }
 
