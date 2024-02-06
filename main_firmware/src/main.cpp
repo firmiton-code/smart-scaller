@@ -3,6 +3,20 @@
 
 //comment for real measurement
 bool RANDOM_TEST = false;
+unsigned long sensor_speed = 100;
+
+float updateWeight(){
+  float weight_dump = 0.00;
+  if(load.update()) {
+    weight_dump = load.weight();
+    if(weight_dump < 0.00) weight_dump = 0.00;
+  }
+
+  if(RANDOM_TEST) weight_dump = random(0.00, 9999.00);
+  Serial.println(weight_dump);
+
+  return weight_dump;
+}
 
 void setup() {
   // put your setup code here, to run once:
@@ -33,6 +47,7 @@ void loop() {
         lcd.show(NUTRITION_WEIGHT_SCREEN);
         lcd.showFood(UNKNOWN);
 
+        lastWeight = 0;
         code = "";
         totalWeight = 0;
         totalAir = 0;
@@ -53,12 +68,15 @@ void loop() {
 
     } else if(lcd.getScreen() == NUTRITION_WEIGHT_SCREEN){
       if(lcd.getKey()<10){
-        code += String(lcd.getKey());
-        lcd.updateCode(code);
+        if(code.length() < 6){
+          code += String(lcd.getKey());
+          lcd.updateCode(code);
+        }
       }
 
       if(lcd.getEnter()){
         int rawCode = code.toInt();
+        
         switch(rawCode){
           case 10001 :
           inputName =  AR001[1]; inputAir =  AR001[2]; inputEnergy =  AR001[3]; inputProtein =  AR001[4]; inputLemak =  AR001[5]; inputKarbo =  AR001[6]; inputSerat =  AR001[7]; inputCarbing =  AR001[8]; inputType =  AR001[9];
@@ -4654,6 +4672,8 @@ void loop() {
         // Serial.println(inputName.length());
         // Serial.println(protein);
 
+        delay(250);
+
         if(inputType != "") lcd.show(NUTRITION_SCALER_SCREEN);
 
         if(inputType == "MINUMAN") inputFood = DRINK;
@@ -4677,6 +4697,29 @@ void loop() {
           lcd.show(NUTRITION_WEIGHT_SCREEN);
           lcd.showFood(UNKNOWN);
         }
+
+        float new_weight = rawWeight;
+
+        rawAir = inputAir.toFloat() * (new_weight / 100.0);
+        rawEnergy = inputEnergy.toFloat() * (new_weight / 100.0);
+        rawProtein = inputProtein.toFloat() * (new_weight / 100.0);
+        rawLemak = inputLemak.toFloat() * (new_weight / 100.0);
+        rawKarbo = inputKarbo.toFloat() * (new_weight / 100.0);
+        rawSerat = inputSerat.toFloat() * (new_weight / 100.0);
+        rawCarbing = inputCarbing.toFloat() * (new_weight / 100.0);
+
+        debug("Total Weight", new_weight);
+        debug("Air", rawAir);
+        debug("Energy", rawEnergy);
+        debug("Protein", rawProtein);
+        debug("Lemak", rawLemak);
+        debug("Karbo", rawKarbo);
+        debug("Serat", rawSerat);
+        debug("Carbing", rawCarbing);
+        Serial.println("");
+        lcd.updateValue(new_weight);
+        lcd.showValue(String(rawWeight, 1)+" gr", String(rawEnergy, 1)+" kkal", String(rawLemak, 1)+" gr", String(rawKarbo, 1)+" gr", String(rawCarbing, 1)+" gr", String(rawProtein, 1)+" gr");
+
       }
 
       if(lcd.getDelete()){
@@ -4686,6 +4729,7 @@ void loop() {
       }
 
       if(lcd.getBack()){
+        lastWeight = 0;
         lcd.show(DASHBOARD_SCREEN);
       }
 
@@ -4694,25 +4738,28 @@ void loop() {
     if(lcd.getScreen() == NUTRITION_SCALER_SCREEN){
       if(lcd.getBack()){
         code = "";
+        
         lcd.show(NUTRITION_WEIGHT_SCREEN);
         lcd.showFood(UNKNOWN);
       }
 
       if(lcd.getTotal()){
-        totalWeight+=rawWeight;
-        totalEnergy+=rawEnergy;
-        totalLemak+=rawLemak;
-        totalKarbo+=rawKarbo;
-        totalCarbing+=rawCarbing;
-        totalProtein+=rawProtein;
-      
+        totalWeight += rawWeight;
+        totalEnergy += rawEnergy;
+        totalLemak += rawLemak;
+        totalKarbo += rawKarbo;
+        totalCarbing += rawCarbing;
+        totalProtein += rawProtein;
+
         lcd.show(TOTAL_NUTRITION_SCREEN);
-        lcd.showTotal(String(totalWeight, 2)+" gr", String(totalEnergy,2)+" kkal", String(totalLemak, 2)+" gr", String(totalKarbo, 2)+" gr", String(totalCarbing, 2)+" gr", String(totalProtein, 2)+" gr");
+        lcd.showTotal(String(totalWeight, 1)+" gr", String(totalEnergy,2)+" kkal", String(totalLemak, 1)+" gr", String(totalKarbo, 1)+" gr", String(totalCarbing, 1)+" gr", String(totalProtein, 1)+" gr");
       }
 
       if(lcd.getReset()){
         code = "";
-        
+
+        lastWeight = 0;
+
         totalWeight = 0;
         totalAir = 0;
         totalCarbing = 0;
@@ -4730,12 +4777,30 @@ void loop() {
         lcd.show(NUTRITION_WEIGHT_SCREEN);
         lcd.showFood(UNKNOWN);
 
-        totalWeight+=rawWeight;
-        totalEnergy+=rawEnergy;
-        totalLemak+=rawLemak;
-        totalKarbo+=rawKarbo;
-        totalCarbing+=rawCarbing;
-        totalProtein+=rawProtein;
+        lastWeight = rawWeight;
+        if(lastWeight != 0){
+          totalWeight += rawWeight;
+          totalEnergy += rawEnergy;
+          totalLemak += rawLemak;
+          totalKarbo += rawKarbo;
+          totalCarbing += rawCarbing;
+          totalProtein += rawProtein;
+        } 
+        // else{
+        //   totalWeight = rawWeight;
+        //   totalEnergy = rawEnergy;
+        //   totalLemak = rawLemak;
+        //   totalKarbo = rawKarbo;
+        //   totalCarbing = rawCarbing;
+        //   totalProtein = rawProtein;
+        // }
+        
+        debug("Total Weight", totalWeight);
+        debug("Total Energy", totalEnergy);
+        debug("Total Lemak", totalLemak);
+        debug("Total Karbo", totalKarbo);
+        debug("Total Carbing", totalCarbing);
+        debug("Total Protein", totalProtein);
 
         code = "";
       }
@@ -4775,7 +4840,7 @@ void loop() {
       }
 
       if(lcd.getHome()){
-        data.save("cal", String(_calibration, 2));
+        data.save("cal", String(_calibration, 1));
         lcd.show(SAVED_SCREEN);
         delay(1500);
         lcd.show(DASHBOARD_SCREEN);
@@ -4792,9 +4857,40 @@ void loop() {
           lcd.show(NUTRITION_WEIGHT_SCREEN);
           lcd.showFood(UNKNOWN);
         }
+
+        float new_weight = rawWeight;
+
+        rawAir = inputAir.toFloat() * (new_weight / 100.0);
+        rawEnergy = inputEnergy.toFloat() * (new_weight / 100.0);
+        rawProtein = inputProtein.toFloat() * (new_weight / 100.0);
+        rawLemak = inputLemak.toFloat() * (new_weight / 100.0);
+        rawKarbo = inputKarbo.toFloat() * (new_weight / 100.0);
+        rawSerat = inputSerat.toFloat() * (new_weight / 100.0);
+        rawCarbing = inputCarbing.toFloat() * (new_weight / 100.0);
+
+        totalWeight -= rawWeight;
+        totalEnergy -= rawEnergy;
+        totalLemak -= rawLemak;
+        totalKarbo -= rawKarbo;
+        totalCarbing -= rawCarbing;
+        totalProtein -= rawProtein;
+
+        debug("Total Weight", new_weight);
+        debug("Air", rawAir);
+        debug("Energy", rawEnergy);
+        debug("Protein", rawProtein);
+        debug("Lemak", rawLemak);
+        debug("Karbo", rawKarbo);
+        debug("Serat", rawSerat);
+        debug("Carbing", rawCarbing);
+        Serial.println("");
+        lcd.updateValue(new_weight);
+        lcd.showValue(String(rawWeight, 1)+" gr", String(rawEnergy, 1)+" kkal", String(rawLemak, 1)+" gr", String(rawKarbo, 1)+" gr", String(rawCarbing, 1)+" gr", String(rawProtein, 1)+" gr");
+
       } 
       
       if(lcd.getHome()){
+        lastWeight = 0;
         lcd.show(DASHBOARD_SCREEN);
       }
     }
@@ -4803,86 +4899,67 @@ void loop() {
     ledcWriteTone(0, 0);
   }
 
-  if(millis() - lastRead > 100){
+  if(millis() - lastRead > sensor_speed){
     if(lcd.getScreen() == NUTRITION_WEIGHT_SCREEN){
-      float weight_dump = 0.00;
-      if(load.update()) {
-        weight_dump = load.weight() + _calibration;
-        if(weight_dump < 0.00) weight_dump = 0.00;
+      if(lastWeight == 0) {
+        rawWeight = updateWeight() - dumpPlate + _calibration;
+      } else{
+        rawWeight = updateWeight() - lastWeight;
       }
 
-      if(RANDOM_TEST) weight_dump = random(0.00, 9999.00);
-      lcd.updateValue(weight_dump);
-      Serial.println(weight_dump);
-      Serial.println(_calibration);
-      Serial.println(dumpPlate);
-      float new_weight = weight_dump - dumpPlate + _calibration;
-      Serial.println(new_weight);
+      float new_weight = rawWeight;
+
+      debug("Last Weight", lastWeight);
+      debug("Calibration", _calibration);
+      debug("Plate", dumpPlate);
+      debug("Total Weight", new_weight);
+      Serial.println("");
+
       lcd.updateValue(new_weight);
     }
     
-    if(lcd.getScreen() == NUTRITION_SCALER_SCREEN){
-      if(load.update()) {
-        float weight_load = load.weight() + _calibration;
-        if(weight_load < 0.00) weight_load = 0.00;
-        rawWeight = weight_load > 0.00 ? weight_load - dumpPlate : weight_load;
-        Serial.println(rawWeight);
-      }
-      
-      if(RANDOM_TEST) rawWeight = random(0.00, 1000.00);
+    // if(lcd.getScreen() == NUTRITION_SCALER_SCREEN){
+    //   float new_weight = rawWeight;
 
-      // lcd.updateValue(rawWeight);
+    //   rawAir = inputAir.toFloat() * (new_weight / 100.0);
+    //   rawEnergy = inputEnergy.toFloat() * (new_weight / 100.0);
+    //   rawProtein = inputProtein.toFloat() * (new_weight / 100.0);
+    //   rawLemak = inputLemak.toFloat() * (new_weight / 100.0);
+    //   rawKarbo = inputKarbo.toFloat() * (new_weight / 100.0);
+    //   rawSerat = inputSerat.toFloat() * (new_weight / 100.0);
+    //   rawCarbing = inputCarbing.toFloat() * (new_weight / 100.0);
 
-      Serial.println(_calibration);
-      Serial.println(dumpPlate);
-      float new_weight = rawWeight - dumpPlate + _calibration;
-      Serial.println(new_weight);
-      lcd.updateValue(new_weight);
-
-      rawAir = inputAir.toFloat() * (new_weight / 100.0);
-      rawEnergy = inputEnergy.toFloat() * (new_weight / 100.0);
-      rawProtein = inputProtein.toFloat() * (new_weight / 100.0);
-      rawLemak = inputLemak.toFloat() * (new_weight / 100.0);
-      rawKarbo = inputKarbo.toFloat() * (new_weight / 100.0);
-      rawSerat = inputSerat.toFloat() * (new_weight / 100.0);
-      rawCarbing = inputCarbing.toFloat() * (new_weight / 100.0);
-
-      lcd.showValue(String(rawWeight, 2)+" gr", String(rawEnergy, 2)+" kkal", String(rawLemak, 2)+" gr", String(rawKarbo, 2)+" gr", String(rawCarbing, 2)+" gr", String(rawProtein, 2)+" gr");
-    }
+    //   debug("Total Weight", new_weight);
+    //   debug("Air", rawAir);
+    //   debug("Energy", rawEnergy);
+    //   debug("Protein", rawProtein);
+    //   debug("Lemak", rawLemak);
+    //   debug("Karbo", rawKarbo);
+    //   debug("Serat", rawSerat);
+    //   debug("Carbing", rawCarbing);
+    //   Serial.println("");
+    //   lcd.updateValue(new_weight);
+    //   lcd.showValue(String(rawWeight, 1)+" gr", String(rawEnergy, 1)+" kkal", String(rawLemak, 1)+" gr", String(rawKarbo, 1)+" gr", String(rawCarbing, 1)+" gr", String(rawProtein, 1)+" gr");
+    // }
 
     if(lcd.getScreen() == UNIVERSAL_WEIGHT_SCREEN){
-      float weight_dump = 0.00;
-      if(load.update()) {
-        weight_dump = load.weight() + _calibration;
-        if(weight_dump < 0.00) weight_dump = 0.00;
-      }
+      rawWeight = updateWeight() + _calibration;
 
-      if(RANDOM_TEST) weight_dump = random(0.00, 9999.00);
-      
-      Serial.println(weight_dump);
-      // lcd.updateValue(weight_dump);
-      Serial.println(_calibration);
-      Serial.println(dumpPlate);
-      float new_weight = weight_dump - dumpPlate + _calibration;
-      Serial.println(new_weight);
-      lcd.updateValue(new_weight);
+      debug("Raw Weight + Calibration", rawWeight);
+      debug("Calibration", _calibration);
+      Serial.println("");
+
+      lcd.updateValue(rawWeight);
     }
 
     if(lcd.getScreen() == CALIBRATION_SCREEN){
-      float weight_dump = 0.00;
-      if(load.update()) {
-        weight_dump = load.weight();
-        if(weight_dump < 0.00) weight_dump = 0.00;
-      }
-
-      if(RANDOM_TEST) weight_dump = random(0.00, 9999.00);
+      rawWeight = updateWeight() + _calibration;
       
-      Serial.println(weight_dump);
-      // lcd.updateValue(weight_dump);
-      Serial.println(_calibration);
-      float new_weight = weight_dump - dumpPlate + _calibration;
-      Serial.println(new_weight);
-      lcd.updateValue(new_weight);
+      debug("Raw Weight + Calibration", rawWeight);
+      debug("Calibration", _calibration);
+      Serial.println("");
+      
+      lcd.updateValue(rawWeight);
     }
 
     if(lcd.getScreen() == DASHBOARD_SCREEN){
@@ -4891,17 +4968,12 @@ void loop() {
       else if(bat > 30 && bat <= 70) lcd.updateBattery(BATTERY_HALF);
       else lcd.updateBattery(BATTERY_LOW);
 
-      float weight_dump = 0.00;
-      if(load.update()) {
-        weight_dump = load.weight();
-        if(weight_dump < 0.00) weight_dump = 0.00;
-      }
-
-      if(RANDOM_TEST) weight_dump = random(0.00, 9999.00);
+      rawWeight = updateWeight() + _calibration;
+      dumpPlate = rawWeight;
       
-      Serial.println(weight_dump);
-      dumpPlate = weight_dump;
-      Serial.println(dumpPlate);
+      debug("Raw Weight + Calibration", rawWeight);
+      debug("Calibration", _calibration);
+      debug("Plate", dumpPlate);
     }
 
     lastRead = millis();

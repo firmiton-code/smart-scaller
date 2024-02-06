@@ -23,6 +23,8 @@
 #define SMALL_TEXT 2
 #define NUMBER_TEXT 7
 
+#define TOUCH_PIN 21 //21 - 5
+
 typedef enum {
   CEREALIA,
   DRINK,

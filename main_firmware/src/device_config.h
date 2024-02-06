@@ -7,6 +7,8 @@
 #include "data/_data.h"
 #include "data/credentials.h"
 
+#define debug(x,y) Serial.print(x); Serial.print(" : "); Serial.println(y);
+
 bool state = false;
 String code;
 int count = 0;
@@ -19,6 +21,7 @@ unsigned long lastRead;
 float totalWeight, totalAir, totalEnergy, totalProtein, totalLemak, totalKarbo, totalSerat, totalCarbing;
 
 float dumpPlate;
+float lastWeight;
 
 double _calibration;
 

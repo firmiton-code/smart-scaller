@@ -73,7 +73,7 @@ void LCDClass::calibration(){
 void LCDClass::init(){
   tft.init();
   tft.setRotation(3);
-  pinMode(21, INPUT);
+  pinMode(TOUCH_PIN, INPUT);
 
   calibration();
 
@@ -186,7 +186,7 @@ void LCDClass::updateBattery(Battery_Level_t batt_level){
 }
 
 bool LCDClass::touchUpdate(){
-  if(digitalRead(21)) return false;
+  if(digitalRead(TOUCH_PIN)) return false;
 
   uint16_t t_x, t_y;
   tft.getTouchRaw(&t_x, &t_y);
@@ -303,7 +303,7 @@ bool LCDClass::touchUpdate(){
 }
 
 void LCDClass::updateValue(float weight_value){
-  String text_value =  weight_value < 800.00 ? String(weight_value, 2) + " gr" : String((weight_value/1000.00), 2) + " kg";
+  String text_value =  weight_value < 800.00 ? String(weight_value, 1) + " gr" : String((weight_value/1000.00), 1) + " kg";
   if(_screen == NUTRITION_WEIGHT_SCREEN || _screen == NUTRITION_SCALER_SCREEN){
     textWeightNutri.fillSprite(BG_COLOR);
     textWeightNutri.setTextDatum(CC_DATUM);
