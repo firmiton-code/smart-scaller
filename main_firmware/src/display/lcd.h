@@ -51,7 +51,15 @@ typedef enum {
   SETTING_SCREEN,
   CALIBRATION_SCREEN,
   SAVED_SCREEN,
-  COMING_SOON_SCREEN
+  COMING_SOON_SCREEN,
+  MENU_1_SCREEN,
+  MENU_2_SCREEN,
+  MENU_3_SCREEN,
+  MENU_4_SCREEN,
+  SETTING_BTOFF_SCREEN,
+  SETTING_BTON_SCREEN,
+  SETTING_INFO_SCREEN,
+  NOT_FOUND_SCREEN
 } Screen_position_t;
 
 typedef enum {
@@ -80,6 +88,9 @@ class LCDClass{
     bool _plus = false;
     bool _minus = false;
     int _mode = 0;
+    int _choose = 0;
+    int _menu = 0;
+    int _set_mode = 0;
 
   public:
     LCDClass();
@@ -109,7 +120,10 @@ class LCDClass{
     bool getPlus();
     bool getMinus();
     int getKey();
-    int getMode();  
+    int getMode();
+    int getChoose();
+    int getMenu();
+    int getSetMode();
 
     Screen_position_t getScreen();
 };

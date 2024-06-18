@@ -30,6 +30,16 @@
 #include "icon/Sugar.h"
 #include "icon/Unknown.h"
 #include "icon/Vegetable.h"
+#include "assets/Choose_Menu_1.h"
+#include "assets/Choose_Menu_2.h"
+#include "assets/Choose_Menu_3.h"
+#include "assets/Choose_Menu_4.h"
+
+#include "assets/Code_Input_Rev.h"
+#include "assets/Setting_BTON.h"
+#include "assets/Setting_BTOFF.h"
+#include "assets/Setting_Info.h"
+#include "assets/NotFound.h"
 
 #include "assets/Setting.h"
 #include "assets/Calibration.h"

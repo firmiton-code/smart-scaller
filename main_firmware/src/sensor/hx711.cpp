@@ -1,4 +1,5 @@
 #include "hx711.h"
+#include "soc/rtc.h"
 
 const int HX711_dout = 48; //mcu > HX711 dout pin
 const int HX711_sck = 47; //mcu > HX711 sck pin
@@ -11,7 +12,8 @@ HX711Class::HX711Class(){
 }
 
 void HX711Class::begin(){
-   LoadCell.begin();
+  
+  LoadCell.begin();
 
   float calibrationValue; // calibration value (see example file "Calibration.ino")
   calibrationValue = 1036.96; // uncomment this if you want to set the calibration value in the sketch
@@ -27,6 +29,8 @@ void HX711Class::begin(){
     LoadCell.setCalFactor(calibrationValue); // set calibration value (float)
     Serial.println("Startup is complete");
   }
+  
+  LoadCell.tareNoDelay();
 }
 
 bool HX711Class::update(){
@@ -35,7 +39,9 @@ bool HX711Class::update(){
 }
 
 float HX711Class::weight(){
-  return LoadCell.getData();
+  float wt = LoadCell.getData();
+  LoadCell.tareNoDelay();
+  return wt;
 }
 
 HX711Class load;

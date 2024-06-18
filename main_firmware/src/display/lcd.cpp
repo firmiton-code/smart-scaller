@@ -135,7 +135,7 @@ void LCDClass::show(Screen_position_t screen){
       tft.pushImage(0, 0, 320, 240, Weight_Scalling);
       break;
     case NUTRITION_WEIGHT_SCREEN :
-      tft.pushImage(0, 0, 320, 240, Code_Input);
+      tft.pushImage(0, 0, 320, 240, Code_Input_Rev);
       break;
     case NUTRITION_SCALER_SCREEN :
       tft.pushImage(0, 0, 320, 240, Code_Success);
@@ -155,12 +155,38 @@ void LCDClass::show(Screen_position_t screen){
     case COMING_SOON_SCREEN :
       tft.pushImage(0, 0, 320, 240, soon);
       break;
+    case MENU_1_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Choose_Menu_1);
+      break;
+    case MENU_2_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Choose_Menu_2);
+      break;
+    case MENU_3_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Choose_Menu_3);
+      break;
+    case MENU_4_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Choose_Menu_4);
+      break;
+    case SETTING_BTOFF_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Setting_BTOFF);
+      break;
+    case SETTING_BTON_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Setting_BTOFF);
+      break;
+    case SETTING_INFO_SCREEN :
+      tft.pushImage(0, 0, 320, 240, Setting_Info);
+      break;
+    case NOT_FOUND_SCREEN :
+      tft.pushImage(0, 0, 320, 240, NotFound);
+      break;
 
-    default :
+   default :
       tft.pushImage(0, 0, 320, 240, Boot);
       break;
   }
   Serial.println(screen);
+
+  Serial.println("Screen Changed");
   _screen = screen;
 }
 
@@ -186,119 +212,206 @@ void LCDClass::updateBattery(Battery_Level_t batt_level){
 }
 
 bool LCDClass::touchUpdate(){
-  if(digitalRead(TOUCH_PIN)) return false;
-
+  if(digitalRead(TOUCH_PIN)) {
+    return false;
+  }
   uint16_t t_x, t_y;
   tft.getTouchRaw(&t_x, &t_y);
   tft.convertRawXY(&t_x, &t_y);
 
-  if(t_x >= 170 && t_x <= 215 && t_y >= 10 && t_y <= 61){
-    _key = 7;
-    Serial.println("7");
-  } else if(t_x >= 220 && t_x <= 264 && t_y >= 10 && t_y <= 61){
-    _key = 8;
-    Serial.println("8");
-  } else if(t_x >= 268 && t_x <= 314 && t_y >= 10 && t_y <= 61){
-    _key = 9;
-    Serial.println("9");
-  } else if(t_x >= 170 && t_x <= 215 && t_y >= 66 && t_y <= 117){
-    _key = 4;
-    Serial.println("4");
-  } else if(t_x >= 220 && t_x <= 264 && t_y >= 66 && t_y <= 117){
-    _key = 5;
-    Serial.println("5");
-  } else if(t_x >= 268 && t_x <= 314 && t_y >= 66 && t_y <= 117){
-    _key = 6;
-    Serial.println("6");
-  } else if(t_x >= 170 && t_x <= 215 && t_y >= 123 && t_y <= 173){
-    _key = 1;
-    Serial.println("1");
-  } else if(t_x >= 220 && t_x <= 264 && t_y >= 123 && t_y <= 173){
-    _key = 2;
-    Serial.println("2");
-  } else if(t_x >= 268 && t_x <= 314 && t_y >= 123 && t_y <= 173){
-    _key = 3;
-    Serial.println("3");
-  } else if(t_x >= 170 && t_x <= 215 && t_y >= 179 && t_y <=230){
-    _key = 0;
-    Serial.println("0");
-  } else{
-    _key = 99;
+  if(_screen == UNIVERSAL_WEIGHT_SCREEN){
+    if(t_x >= 17 && t_x <= 52 && t_y >= 17 && t_y <= 52){
+      _back = true;
+      Serial.println("Back");
+    } else{
+      _back = false;
+    }
+  }
+
+  if(_screen == MENU_1_SCREEN || _screen == MENU_2_SCREEN || _screen == MENU_3_SCREEN || _screen == MENU_4_SCREEN){
+    if(t_x >= 17 && t_x <= 52 && t_y >= 17 && t_y <= 52){
+      _back = true;
+      Serial.println("Back");
+    } else{
+      _back = false;
+    }
+
+    if(t_x >= 32 && t_x <= 252 && t_y >= 56 && t_y <= 96){
+      _choose =  1;
+      Serial.println("1");
+    } else if(t_x >= 32 && t_x <= 252 && t_y >= 104 && t_y <= 144){
+      _choose = 2;
+      Serial.println("2");
+    } else if(t_x >= 32 && t_x <= 252 && t_y >= 152 && t_y <= 192){
+      _choose = 3;
+      Serial.println("3");
+    } else if(t_x >= 32 && t_x <= 252 && t_y >= 200 && t_y <= 240){
+      _choose = 4;
+      Serial.println("4");
+    } else{
+      _choose = 0;
+    }
+
+    if(t_x >= 270 && t_x <= 300 && t_y >= 50 && t_y <= 80){
+      _menu = 1;
+      Serial.println("Menu Up");
+    } else if(t_x >= 270 && t_x <= 300 && t_y >= 180 && t_y <= 230){
+      _menu = 2;
+      Serial.println("Menu Down");
+    } else{
+      _menu = 0;
+    }
+  }
+
+  if(_screen == NUTRITION_WEIGHT_SCREEN){
+    if(t_x >= 186 && t_x <= 246 && t_y >= 45 && t_y <= 100){
+      _key =  1;
+      Serial.println("1");
+    } else if(t_x >= 254 && t_x <= 314 && t_y >= 45 && t_y <= 100){
+      _key = 2;
+      Serial.println("2");
+    } else if(t_x >= 186 && t_x <= 246 && t_y >= 110 && t_y <= 165){
+      _key = 3;
+      Serial.println("3");
+    } else if(t_x >= 254 && t_x <= 314 && t_y >= 110 && t_y <= 165){
+      _key = 4;
+      Serial.println("4");
+    } else if(t_x >= 186 && t_x <= 264 && t_y >= 175 && t_y <= 230){
+      _key = 5;
+      Serial.println("5");
+    } else {
+      _key = 99;
+    }
+
+    if(t_x >= 220 && t_x <= 314 && t_y >= 175 && t_y <= 230){
+      _enter = true;
+      Serial.println("Enter");
+    } else{
+      _enter = false;
+    }
+    
+    if(t_x >= 17 && t_x <= 52 && t_y >= 17 && t_y <= 52){
+      _back = true;
+      Serial.println("Back");
+    } else{
+      _back = false;
+    }
+    
+    if(t_x >= 64 && t_x <= 99 && t_y >= 17 && t_y <= 52){
+      _next = true;
+      Serial.println("Next");
+    } else{
+      _next = false;
+    }
+    
+    if(t_x >= 285 && t_x <= 310 && t_y >= 15 && t_y <= 35){
+      _delete = true;
+      Serial.println("Delete");
+    } else{
+      _delete = false;
+    }
+  }
+
+  if(_screen == NUTRITION_SCALER_SCREEN){
+    if(t_x >= 241 && t_x <= 307 && t_y >= 194 && t_y <= 224){
+      _total = true;
+      Serial.println("Total");
+    } else if(t_x >= 160 && t_x <= 226 && t_y >= 194 && t_y <= 224){
+      _reset = true;
+      Serial.println("Reset");
+    } else{
+      _reset = false;
+    }
+
+    if(t_x >= 17 && t_x <= 52 && t_y >= 17 && t_y <= 52){
+      _back = true;
+      Serial.println("Back");
+    } else{
+      _back = false;
+    }
+  }
+
+  if(_screen == CALIBRATION_SCREEN || _screen == TOTAL_NUTRITION_SCREEN){
+    if(t_x >= 283 && t_x <= 338 && t_y >= 7 && t_y <= 52){
+      _home = true;
+      Serial.println("Home");
+    } else{
+      _home = false;
+    }
+
+    if(t_x >= 17 && t_x <= 52 && t_y >= 17 && t_y <= 52){
+      _back = true;
+      Serial.println("Back");
+    } else{
+      _back = false;
+    }
   }
   
-  if(t_x >= 220 && t_x <= 314 && t_y >= 179 && t_y <=230){
-    _enter = true;
-    Serial.println("Enter");
-  } else{
-    _enter = false;
-  }
+  if(_screen == CALIBRATION_SCREEN){
+    if(t_x >= 49 && t_x <= 104 && t_y >= 163 && t_y <= 212){
+      _minus = true;
+      Serial.println("Minus");
+    } else{
+      _minus = false;
+    }
 
-  if(t_x >= 17 && t_x <= 52 && t_y >= 17 && t_y <= 52){
-    _back = true;
-    Serial.println("Back");
-  } else{
-    _back = false;
+    if(t_x >= 215 && t_x <= 270 && t_y >= 163 && t_y <= 212){
+      _plus = true;
+      Serial.println("Plus");
+    } else{
+      _plus = false;
+    }
+    
+    if(t_x >= 17 && t_x <= 52 && t_y >= 17 && t_y <= 52){
+      _back = true;
+      Serial.println("Back");
+    } else{
+      _back = false;
+    }
   }
   
-  if(t_x >= 64 && t_x <= 99 && t_y >= 17 && t_y <= 52){
-    _next = true;
-    Serial.println("Next");
-  } else{
-    _next = false;
+  if(_screen == SETTING_INFO_SCREEN){
+    if(t_x >= 17 && t_x <= 52 && t_y >= 17 && t_y <= 52){
+      _back = true;
+      Serial.println("Back");
+    } else{
+      _back = false;
+    }
   }
 
-  if(t_x >= 100 && t_x <= 150 && t_y >= 179 && t_y <=230){
-    _delete = true;
-    Serial.println("Delete");
-  } else{
-    _delete = false;
-  }
-  
-  if(t_x >= 241 && t_x <= 307 && t_y >= 194 && t_y <= 224){
-    _total = true;
-    Serial.println("Total");
-  } else{
-    _total = false;
+  if(_screen == SETTING_BTON_SCREEN || _screen == SETTING_BTOFF_SCREEN){
+    if(t_x >= 17 && t_x <= 52 && t_y >= 17 && t_y <= 52){
+      _back = true;
+      Serial.println("Back");
+    } else{
+      _back = false;
+    }
+
+    if(t_x >= 145 && t_x <= 190 && t_y >= 43 && t_y <= 220){
+      _set_mode = 2;
+    } else if(t_x >= 95 && t_x <= 140 && t_y >= 43 && t_y <= 220){
+      _set_mode = 1;
+    } else{
+      _set_mode = 0;
+    }
   }
 
-  if(t_x >= 160 && t_x <= 226 && t_y >= 194 && t_y <= 224){
-    _reset = true;
-    Serial.println("Reset");
-  } else{
-    _reset = false;
+  if(_screen == DASHBOARD_SCREEN){
+    if(t_x >= 20 && t_x <= 150 && t_y >= 20 && t_y <=220){
+      _mode = 1;
+      Serial.println("Mode");
+    } else if(t_x >= 170 && t_x <= 300 && t_y >= 20 && t_y <=149){
+      _mode = 2;
+      Serial.println("Mode");
+    } else if(t_x >= 240 && t_x <= 300 && t_y >= 160 && t_y <=220){
+      _mode = 3;
+      Serial.println("Mode");
+    } else{
+      _mode = 0;
+    }
   }
 
-  if(t_x >= 283 && t_x <= 338 && t_y >= 7 && t_y <= 52){
-    _home = true;
-    Serial.println("Home");
-  } else{
-    _home = false;
-  }
-
-  if(t_x >= 49 && t_x <= 104 && t_y >= 163 && t_y <= 212){
-    _minus = true;
-    Serial.println("Minus");
-  } else{
-    _minus = false;
-  }
-
-  if(t_x >= 215 && t_x <= 270 && t_y >= 163 && t_y <= 212){
-    _plus = true;
-    Serial.println("Plus");
-  } else{
-    _plus = false;
-  }
-
-  if(t_x >= 20 && t_x <= 150 && t_y >= 20 && t_y <=220){
-    _mode = 1;
-  } else if(t_x >= 170 && t_x <= 300 && t_y >= 20 && t_y <=149){
-    _mode = 2;
-  } else if(t_x >= 240 && t_x <= 300 && t_y >= 160 && t_y <=220){
-    _mode = 3;
-  } else{
-    _mode = 0;
-  }
-
+  Serial.println("Screen Tapped");
   return true;
 }
 
@@ -325,7 +438,7 @@ void LCDClass::updateCode(String code){
   tft.setFreeFont(&FreeSans9pt7b);
   // tft.setTextColor(TFT_BLACK, TFT_WHITE);
   tft.setTextDatum(TL_DATUM);
-  tft.drawString(code, 15, 203, 1);
+  tft.drawString(code, 192, 18, 1);
 }
 
 void LCDClass::updateCal(String cal){
@@ -339,50 +452,50 @@ void LCDClass::updateCal(String cal){
 void LCDClass::showFood(Food_type_t food){
   switch (food){
     case CEREALIA :
-      tft.pushImage(43, 95, 80, 80, Cerealia, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Cerealia, BG_COLOR);
       break;
     case DRINK :
-      tft.pushImage(43, 95, 80, 80, Drink, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Drink, BG_COLOR);
       break;
     case EGG :
-      tft.pushImage(43, 95, 80, 80, Egg, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Egg, BG_COLOR);
       break;
     case FISH :
-      tft.pushImage(43, 95, 80, 80, Fish, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Fish, BG_COLOR);
       break;
     case FRUITS :
-      tft.pushImage(43, 95, 80, 80, Fruits, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Fruits, BG_COLOR);
       break;
     case MEAT :
-      tft.pushImage(43, 95, 80, 80, Milk, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Milk, BG_COLOR);
       break;
     case MILK :
-      tft.pushImage(43, 95, 80, 80, Milk, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Milk, BG_COLOR);
       break;
     case NUTS :
-      tft.pushImage(43, 95, 80, 80, Nuts, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Nuts, BG_COLOR);
       break;
     case OIL :
-      tft.pushImage(43, 95, 80, 80, Oil, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Oil, BG_COLOR);
       break;
     case ROOTS :
-      tft.pushImage(43, 95, 80, 80, Roots, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Roots, BG_COLOR);
       break;
     case SPICE :
-      tft.pushImage(43, 95, 80, 80, Spice, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Spice, BG_COLOR);
       break;
     case SUGAR :
-      tft.pushImage(43, 95, 80, 80, Sugar, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Sugar, BG_COLOR);
       break;
     case VEGETABLE :
-      tft.pushImage(43, 95, 80, 80, Vegetable, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Vegetable, BG_COLOR);
       break;
     case UNKNOWN :
-      tft.pushImage(43, 95, 80, 80, Unknown, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Unknown, BG_COLOR);
       break;
 
     default :
-      tft.pushImage(43, 95, 80, 80, Unknown, BG_COLOR);
+      tft.pushImage(180, 53, 80, 80, Unknown, BG_COLOR);
       break;
   }
 }
@@ -429,6 +542,18 @@ int LCDClass::getKey(){
 
 int LCDClass::getMode(){
   return _mode;
+}
+
+int LCDClass::getChoose(){
+  return _choose;
+}
+
+int LCDClass::getMenu(){
+  return _menu;
+}
+
+int LCDClass::getSetMode(){
+  return _set_mode;
 }
 
 Screen_position_t LCDClass::getScreen(){
