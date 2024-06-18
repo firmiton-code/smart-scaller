@@ -171,7 +171,7 @@ void LCDClass::show(Screen_position_t screen){
       tft.pushImage(0, 0, 320, 240, Setting_BTOFF);
       break;
     case SETTING_BTON_SCREEN :
-      tft.pushImage(0, 0, 320, 240, Setting_BTOFF);
+      tft.pushImage(0, 0, 320, 240, Setting_BTON);
       break;
     case SETTING_INFO_SCREEN :
       tft.pushImage(0, 0, 320, 240, Setting_Info);
@@ -297,13 +297,6 @@ bool LCDClass::touchUpdate(){
       _back = false;
     }
     
-    if(t_x >= 64 && t_x <= 99 && t_y >= 17 && t_y <= 52){
-      _next = true;
-      Serial.println("Next");
-    } else{
-      _next = false;
-    }
-    
     if(t_x >= 285 && t_x <= 310 && t_y >= 15 && t_y <= 35){
       _delete = true;
       Serial.println("Delete");
@@ -321,6 +314,13 @@ bool LCDClass::touchUpdate(){
       Serial.println("Reset");
     } else{
       _reset = false;
+    }
+
+    if(t_x >= 64 && t_x <= 99 && t_y >= 17 && t_y <= 52){
+      _next = true;
+      Serial.println("Next");
+    } else{
+      _next = false;
     }
 
     if(t_x >= 17 && t_x <= 52 && t_y >= 17 && t_y <= 52){
@@ -417,13 +417,13 @@ bool LCDClass::touchUpdate(){
 
 void LCDClass::updateValue(float weight_value){
   String text_value =  weight_value < 800.00 ? String(weight_value, 1) + " gr" : String((weight_value/1000.00), 1) + " kg";
-  if(_screen == NUTRITION_WEIGHT_SCREEN || _screen == NUTRITION_SCALER_SCREEN){
+  if(_screen == NUTRITION_WEIGHT_SCREEN/* || _screen == NUTRITION_SCALER_SCREEN*/){
     textWeightNutri.fillSprite(BG_COLOR);
     textWeightNutri.setTextDatum(CC_DATUM);
     textWeightNutri.setFreeFont(&FreeSans12pt7b);
     textWeightNutri.setTextColor(TFT_BLACK, TFT_WHITE);
-    textWeightNutri.drawString(text_value, 75, 15, 1);  //koordinat berat yg 2 variabel tengah
-    textWeightNutri.pushSprite(8, 53);
+    textWeightNutri.drawString(text_value, 76, 10, 1);  //koordinat berat yg 2 variabel tengah
+    textWeightNutri.pushSprite(20, 179);
   } else if(_screen == UNIVERSAL_WEIGHT_SCREEN || _screen == CALIBRATION_SCREEN){ 
     textWeightUniv.fillSprite(BG_COLOR); 
     textWeightUniv.setTextDatum(CC_DATUM);
@@ -452,50 +452,50 @@ void LCDClass::updateCal(String cal){
 void LCDClass::showFood(Food_type_t food){
   switch (food){
     case CEREALIA :
-      tft.pushImage(180, 53, 80, 80, Cerealia, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Cerealia, BG_COLOR);
       break;
     case DRINK :
-      tft.pushImage(180, 53, 80, 80, Drink, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Drink, BG_COLOR);
       break;
     case EGG :
-      tft.pushImage(180, 53, 80, 80, Egg, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Egg, BG_COLOR);
       break;
     case FISH :
-      tft.pushImage(180, 53, 80, 80, Fish, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Fish, BG_COLOR);
       break;
     case FRUITS :
-      tft.pushImage(180, 53, 80, 80, Fruits, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Fruits, BG_COLOR);
       break;
     case MEAT :
-      tft.pushImage(180, 53, 80, 80, Milk, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Milk, BG_COLOR);
       break;
     case MILK :
-      tft.pushImage(180, 53, 80, 80, Milk, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Milk, BG_COLOR);
       break;
     case NUTS :
-      tft.pushImage(180, 53, 80, 80, Nuts, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Nuts, BG_COLOR);
       break;
     case OIL :
-      tft.pushImage(180, 53, 80, 80, Oil, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Oil, BG_COLOR);
       break;
     case ROOTS :
-      tft.pushImage(180, 53, 80, 80, Roots, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Roots, BG_COLOR);
       break;
     case SPICE :
-      tft.pushImage(180, 53, 80, 80, Spice, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Spice, BG_COLOR);
       break;
     case SUGAR :
-      tft.pushImage(180, 53, 80, 80, Sugar, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Sugar, BG_COLOR);
       break;
     case VEGETABLE :
-      tft.pushImage(180, 53, 80, 80, Vegetable, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Vegetable, BG_COLOR);
       break;
     case UNKNOWN :
-      tft.pushImage(180, 53, 80, 80, Unknown, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Unknown, BG_COLOR);
       break;
 
     default :
-      tft.pushImage(180, 53, 80, 80, Unknown, BG_COLOR);
+      tft.pushImage(53, 70, 80, 80, Unknown, BG_COLOR);
       break;
   }
 }

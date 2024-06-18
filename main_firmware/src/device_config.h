@@ -15,6 +15,7 @@ String typeCode;
 bool state = false;
 String code;
 int count = 0;
+int bat;
 String inputName;
 String inputWeight, inputAir, inputEnergy, inputProtein, inputLemak, inputKarbo, inputSerat, inputCarbing, inputType, inputCode;
 Food_type_t inputFood;
